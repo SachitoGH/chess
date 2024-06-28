@@ -2,7 +2,15 @@ NAME        = chess
 
 MAIN        = main.c
 
-OBJS        = $(MAIN:.c=.o)
+MOVE		= move/move.c \
+			  move/pawn.c \
+			  move/bishop.c \
+			  move/rook.c \
+			  move/queen.c \
+			  move/king.c \
+			  move/utils.c
+
+OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o)
 
 CC          = gcc
 
