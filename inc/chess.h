@@ -41,6 +41,9 @@ int	pawn(t_piece p, int from[2], int to[2]);
 int	move_diag(t_piece p, int from[2], int dist_x, int dist_y);
 int	bishop(t_piece p, int from[2], int to[2]);
 
+// knight.c
+int knight(t_piece p, int from[2], int to[2]);
+
 // rook.c
 int	move_straight(t_piece p, int from[2], int dist_x, int dist_y);
 int	rook(t_piece p, int from[2], int to[2]);
