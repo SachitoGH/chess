@@ -5,6 +5,7 @@ MAIN        = main.c
 MOVE		= move/move.c \
 			  move/pawn.c \
 			  move/bishop.c \
+			  move/knight.c \
 			  move/rook.c \
 			  move/queen.c \
 			  move/king.c \

@@ -13,8 +13,8 @@ int	is_legal_move(int from[2], int to[2])
 		res = pawn(p, from, to);
 	if (p.name == 'r')
 		res = rook(p, from, to);
-	// if (piece == 'n' || piece == 'N')
-	// 	res = knight(from, to);
+	if (p.name == 'n')
+		res = knight(p, from, to);
 	if (p.name == 'b')
 		res = bishop(p, from, to);
 	if (p.name == 'q')
