@@ -27,14 +27,14 @@ int	move_diag(t_piece p, int from[2], int dist_x, int dist_y)
 	return (1);
 }
 
-int	bishop(t_piece p, int from[2], int to[2])
+int	bishop(t_piece p, t_move move)
 {
 	int	dist_x;
 	int	dist_y;
 
-	dist_x = to[1] - from[1];
-	dist_y = to[0] - from[0];
-	if (!move_diag(p, from, dist_x, dist_y))
+	dist_x = move.to[1] - move.from[1];
+	dist_y = move.to[0] - move.from[0];
+	if (!move_diag(p, move.from, dist_x, dist_y))
 		return (0);
 	return (1);
 }

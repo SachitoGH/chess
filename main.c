@@ -11,13 +11,14 @@ t_square	board[8][8] = {
     {{{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}},
     {{{'r', 'w'}, 'b'}, {{'n', 'w'}, 'w'}, {{'b', 'w'}, 'b'}, {{'q', 'w'}, 'w'}, {{'k', 'w'}, 'b'}, {{'b', 'w'}, 'w'}, {{'n', 'w'}, 'b'}, {{'r', 'w'}, 'w'}}
 };
+char		player = 'w';
 
-int	update_board(int from[2], int to[2])
+int	update_board(t_move move)
 {
-	t_square	empty = {{0, 0}, board[from[0]][from[1]].square_color};
+	t_square	empty = {{0, 0}, board[move.from[0]][move.from[1]].square_color};
 
-	board[to[0]][to[1]].piece = board[from[0]][from[1]].piece;
-	board[from[0]][from[1]] = empty;
+	board[move.to[0]][move.to[1]].piece = board[move.from[0]][move.from[1]].piece;
+	board[move.from[0]][move.from[1]] = empty;
 	return (0);
 }
 
@@ -55,38 +56,45 @@ int	print_board(void)
 	return (0);
 }
 
-int	verif_input(char *str1, char *str2)
+int	verif_input(char *move)
 {
-	int	i;
+	int	len;
 
-	i = 0;
-	while (str1[i])
-		i++;
-	if (i != 2 || (str1[0] < 'a' || str1[0] > 'h') || (str1[1] < '1' || str1[1] > '8'))
+	len = strlen(move);
+	if (len > 5)
 		return (1);
-	i = 0;
-	while (str2[i])
-		i++;
-	if (i != 2 || (str2[0] < 'a' || str2[0] > 'h') || (str2[1] < '1' || str2[1] > '8'))
-		return (1);
-	return (0);
+	if (len == 2 && inside_board(move[0], move[1]))
+		return (0);
+	if (len == 3 && is_piece(move[0]) && inside_board(move[1], move[2]))
+		return (0);
+	if (len == 4 && ((is_piece(move[0]) && inside_board(move[2], move[3])) ||
+		((move[0] >= 'a' && move[0] <= 'h') && move[1] == 'x' && inside_board(move[2], move[3]))))
+		return (0);
+	if (len == 5 && is_piece(move[0]) && ((move[1] >= 'a' && move[1] <= 'h') || (move[1] >= '1' && move[1] <= '8')) &&
+		move[2] == 'x' && inside_board(move[3], move[4]))
+		return (0);
+	return (1);
 }
 
 int	main(void)
 {
-	char	color[2][6] = {
+	char	team[2][6] = {
 		{"white"},
 		{"black"},
 	};
-	char	from[3];
-	char	to[3];
+	char	move[8];
 
 	while (1)
 	{
 		print_board();
-		printf("%s move: ", color[move_count % 2]);
-		scanf("%s %s", from, to);
-		if (!verif_input(from, to) && !do_move(from, to))
+		player = *team[move_count % 2];
+		printf("%s move: ", team[move_count % 2]);
+		scanf("%s", move);
+		if (verif_input(move))
+			printf("%sSYNTAX ERROR%s\n", color("red"), color(0));
+		else if (do_move(move))
+			printf("%sILLEGAL MOVE%s\n", color("red"), color(0));
+		else
 			move_count++;
 	}
 	return (0);
