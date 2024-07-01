@@ -1,24 +1,37 @@
 #include "chess.h"
 
-int	convert_coord(char *move_str, t_move *move)
+char    *color_bg(char *name)
 {
-    (*move).from[0] = move_str[1] - '1';
-	(*move).from[1] = move_str[0] - 'a';
-    (*move).from[0] += 7 - ((*move).from[0] * 2);
-    (*move).to[0] = move_str[3] - '1';
-	(*move).to[1] = move_str[2] - 'a';
-	(*move).to[0] += 7 - ((*move).to[0] * 2);
-	return (0);
+    if (!name)
+        return ("\e[0m");
+    if (!strcmp(name, "cyan"))
+        return ("\e[46m");
+    if (!strcmp(name, "black"))
+        return ("\e[40m");
+    if (!strcmp(name, "white"))
+        return("\e[47m");
+    if (!strcmp(name, "purple"))
+        return ("\e[45m");
+    return ("\e[0m");
 }
-
 char    *color(char *name)
 {
     if (!name)
         return ("\033[0m"); //default color
     if (!strcmp(name, "purple"))
-        return ("\033[0;35m");
+        return ("\033[1;35m");
+    if (!strcmp(name, "white"))
+        return ("\033[1;37m");
     if (!strcmp(name, "red"))
-        return ("\033[0;31m");
+        return ("\033[1;31m");
+    if (!strcmp(name, "yellow"))
+        return ("\033[1;33m");
+    if (!strcmp(name, "green"))
+        return ("\033[1;32m");
+    if (!strcmp(name, "cyan"))
+        return ("\033[0;36m");
+    if (!strcmp(name, "black"))
+        return ("\e[1;30m");
     return ("\033[0m");
 }
 int inside_board(char letter, char number)

@@ -9,7 +9,7 @@ MOVE		= move/move.c \
 			  move/rook.c \
 			  move/queen.c \
 			  move/king.c \
-			  move/san_converter.c \
+			  move/conversion.c \
 			  move/utils.c
 
 OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o)

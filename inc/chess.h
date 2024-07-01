@@ -7,6 +7,12 @@
 # include <signal.h>
 # include <string.h>
 
+# define WHITE_BG "white"
+# define BLACK_BG "black"
+# define WHITE_COLOR "white"
+# define BLACK_COLOR "purple"
+# define COORD_COLOR "yellow"
+
 typedef struct s_piece
 {
 	char	name;
@@ -27,20 +33,26 @@ typedef struct s_move
 
 
 // global var;
-extern int	move_count;
+extern int		check;
+extern int		move_count;
 extern t_square	board[8][8];
-extern char	player;
+extern char		player;
+extern	t_move	last_move;
+extern t_piece	piece_taken;
 
 // main.c
 int	update_board(t_move move);
-int	print_board(void);
+void	print_board(void);
+void	print_board_colored(void);
 int	verif_input(char *move);
 
 
 // move
 // move.c
 int	is_legal_move(t_move move);
-int	do_move(char *move_str);
+int	undo_move(t_move move);
+int	do_move(t_move move);
+int	piece_is_attacked(int pos_x, int pos_y);
 
 // pawn.c
 int	pawn(t_piece p, t_move move);
@@ -62,12 +74,14 @@ int queen(t_piece p, t_move move);
 // king.c
 int king(t_piece p, t_move move);
 
-// notation.c
+// conversion.c
 char	*san_to_coord(char *move_str);
+int	str_to_move(char *move_str, t_move *move);
+int	convert_coord(char *move_str, t_move *move);
 
 // utils.c
-int	convert_coord(char *move_str, t_move *move);
 char    *color(char *name);
+char    *color_bg(char *name);
 int inside_board(char letter, char number);
 int is_piece(char p);
 
