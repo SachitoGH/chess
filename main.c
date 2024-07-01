@@ -167,21 +167,6 @@ int	checkmate(void)
 	return (0);
 }
 
-int	attack_king(void)
-{
-	int	king_pos[2];
-
-	change_player();
-	locate_king(player, king_pos);
-	if (my_piece_is_attacked(king_pos[0], king_pos[1]))
-	{
-		change_player();
-		return (1);
-	}
-	change_player();
-	return (0);
-}
-
 int	main(void)
 {
 	char	team[2][6] = {
@@ -198,11 +183,6 @@ int	main(void)
 		piece_taken.team = 0;
 		player = *team[move_count % 2];
 		// print_board();
-		if (!checkmate())
-		{
-			printf("%sCHECKMATE%s\n", color("green"), color(0));
-			return (0);
-		}
 		printf("(%i) %s move: ", move_count + 1, team[move_count % 2]);
 		scanf("%s9", input);
 		if (input[0] == '/')
@@ -213,8 +193,16 @@ int	main(void)
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
 		else
 		{
-			if (attack_king())
+			change_player();
+			if (!checkmate())
+			{
+				printf("%sCHECKMATE%s\n", color("green"), color(0));
+				print_board();
+				return (0);
+			}
+			if (king_under_attack())
 				printf("%sCHECK%s\n", color("green"), color(0));
+			change_player();
 			last_move = move;
 			move_count++;
 		}

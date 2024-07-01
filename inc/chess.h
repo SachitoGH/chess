@@ -58,6 +58,7 @@ int	do_move(t_move move);
 int	my_piece_is_attacked(int pos_x, int pos_y);
 void	change_player(void);
 int	locate_king(char team, int king_pos[2]);
+int king_under_attack(void);
 
 // pawn.c
 int	pawn(t_piece p, t_move move);
