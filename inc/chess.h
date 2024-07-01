@@ -46,13 +46,18 @@ void	print_board(void);
 void	print_board_colored(void);
 int	verif_input(char *move);
 
+// utils
+// command.c
+int	special_command(char *input);
 
 // move
 // move.c
 int	is_legal_move(t_move move);
 int	undo_move(t_move move);
 int	do_move(t_move move);
-int	piece_is_attacked(int pos_x, int pos_y);
+int	my_piece_is_attacked(int pos_x, int pos_y);
+void	change_player(void);
+int	locate_king(char team, int king_pos[2]);
 
 // pawn.c
 int	pawn(t_piece p, t_move move);

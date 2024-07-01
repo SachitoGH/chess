@@ -29,7 +29,7 @@ char    *color(char *name)
     if (!strcmp(name, "green"))
         return ("\033[1;32m");
     if (!strcmp(name, "cyan"))
-        return ("\033[0;36m");
+        return ("\033[1;36m");
     if (!strcmp(name, "black"))
         return ("\e[1;30m");
     return ("\033[0m");

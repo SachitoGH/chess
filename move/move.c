@@ -51,15 +51,15 @@ int	locate_king(char team, int king_pos[2])
 	}
 	return (1);
 }
-int	piece_is_attacked(int pos_x, int pos_y)
+int	my_piece_is_attacked(int pos_x, int pos_y)
 {
 	int	i;
 	int	j;
 	t_move move;
 
+	change_player();
 	move.to[0] = pos_x;
 	move.to[1] = pos_y;
-
 	i = 0;
 	while (i < 8)
 	{
@@ -69,11 +69,15 @@ int	piece_is_attacked(int pos_x, int pos_y)
 		{
 			move.from[1] = j;
 			if (!is_legal_move(move))
+			{
+				change_player();
 				return (1);
+			}
 			j++;
 		}
 		i++;
 	}
+	change_player();
 	return (0);
 }
 void	change_player(void)
@@ -84,18 +88,13 @@ void	change_player(void)
 		player = 'w';
 }
 
-int	attack_king(void)
+int king_under_attack(void)
 {
 	int		king_pos[2];
 
 	locate_king(player, king_pos);
-	change_player();
-	if (piece_is_attacked(king_pos[0], king_pos[1]))
-	{
-		change_player();
+	if (my_piece_is_attacked(king_pos[0], king_pos[1]))
 		return (1);
-	}
-	change_player();
 	return (0);
 }
 
@@ -116,11 +115,11 @@ int	do_move(t_move move)
 {
 	if (is_legal_move(move))
 		return(1);
+	piece_taken =  board[move.to[0]][move.to[1]].piece;
 	update_board(move);
-	last_move = move;
-	if (attack_king())
+	if (king_under_attack())
 	{
-		undo_move(last_move);
+		undo_move(move);
 		return (1);
 	}
 	return (0);	

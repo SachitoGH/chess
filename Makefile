@@ -12,7 +12,9 @@ MOVE		= move/move.c \
 			  move/conversion.c \
 			  move/utils.c
 
-OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o)
+UTILS		= utils/command.c
+
+OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o)
 
 CC          = gcc
 
