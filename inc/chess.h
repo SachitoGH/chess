@@ -80,6 +80,9 @@ int queen(t_piece p, t_move move);
 // king.c
 int king(t_piece p, t_move move);
 
+// castling.c
+int	castling(char *san, char **move);
+
 // conversion.c
 char	*san_to_coord(char *move_str);
 int	str_to_move(char *move_str, t_move *move);

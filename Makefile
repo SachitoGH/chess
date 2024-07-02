@@ -9,6 +9,7 @@ MOVE		= move/move.c \
 			  move/rook.c \
 			  move/queen.c \
 			  move/king.c \
+			  move/castling.c \
 			  move/conversion.c \
 			  move/utils.c
 

@@ -63,7 +63,12 @@ char	*san_to_coord(char *san)
 	move = malloc(sizeof(char) * 5);
     if (!move)
         return (0);
-    len = 0;
+    if (!strcmp(san, "O-O") || !strcmp(san, "O-O-O"))
+	{
+		castling(san, &move);
+		return (move);
+	}
+	len = 0;
 	while (san[len])
 	{
 		if (san[len] == 'x')
