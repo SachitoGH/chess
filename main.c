@@ -123,11 +123,13 @@ int	can_move(int x, int y)
 	return (0);
 }
 
-int	checkmate(void)
+int	legal_move(void)
 {
+  int legal_move;
 	int	i;
 	int	j;
 
+  legal_move = 0;
 	i = 0;
 	while (i < 8)
 	{
@@ -136,12 +138,12 @@ int	checkmate(void)
 		{
 			if (board[i][j].piece.team == player)
 				if (can_move(i, j))
-					return (1);
+					legal_move++;
 			j++;
 		}
 		i++;
 	}
-	return (0);
+	return (legal_move);
 }
 
 int	verif_check(void)
@@ -149,6 +151,7 @@ int	verif_check(void)
 	t_piece tmp_p;
 	int		tmp_ep[2][8];
 	int	i;
+  int legal;
 
 	i = 0;
 	while (i < 8)
@@ -157,14 +160,24 @@ int	verif_check(void)
 		i++;
 	}
 	tmp_p = piece_taken;
-	if (!checkmate())
-	{
-		printf("%sCHECKMATE%s\n", color("green"), color(0));
-		print_board();
-		return (1);
-	}
+  legal = legal_move();
 	if (king_under_attack())
-		printf("(%sCHECK%s)", color("green"), color(0));
+  {
+    if (!legal)
+    {               
+      printf("%sCHECKMATE%s\n", color("green"),      color(0));
+      print_board();
+      return (1);                                  
+    }
+    else
+     printf("(%sCHECK%s)", color("green"), color(0));
+  }
+  if (!legal)
+  {
+    printf("%sSTALEMATE%s\n", color("green"), color(0));
+    print_board();
+    return (1);
+  }
 	piece_taken = tmp_p;
 	i = 0;
 	while (i < 8)
@@ -218,6 +231,7 @@ int	main(void)
 	
 	while (1)
 	{
+    print_board();
 		player = *team[move_count % 2];
 		if (verif_check())
 			return (0);
