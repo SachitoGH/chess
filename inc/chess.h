@@ -7,8 +7,6 @@
 # include <signal.h>
 # include <string.h>
 
-# define WHITE_BG "white"
-# define BLACK_BG "black"
 # define WHITE_COLOR "white"
 # define BLACK_COLOR "purple"
 # define COORD_COLOR "yellow"
@@ -33,28 +31,34 @@ typedef struct s_move
 
 
 // global var;
-extern int		check;
+extern int		en_passant[2][8];
+extern char		promote_to;
 extern int		move_count;
+extern int		move_chess;
 extern t_square	board[8][8];
 extern char		player;
 extern	t_move	last_move;
 extern t_piece	piece_taken;
+extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
 
 // main.c
 int	update_board(t_move move);
 void	print_board(void);
-void	print_board_colored(void);
 int	verif_input(char *move);
 
 // utils
 // command.c
 int	special_command(char *input);
 
+// promotion.c
+int	promotion(t_move *move);
+int	undo_promotion(t_move move);
+
 // move
 // move.c
 int	is_legal_move(t_move move);
 int	undo_move(t_move move);
-int	do_move(t_move move);
+int	do_move(t_move *move);
 int	my_piece_is_attacked(int pos_x, int pos_y);
 void	change_player(void);
 int	locate_king(char team, int king_pos[2]);
@@ -62,6 +66,8 @@ int king_under_attack(void);
 
 // pawn.c
 int	pawn(t_piece p, t_move move);
+int	undo_en_passant(t_move move);
+
 
 // bishop.c
 int	move_diag(t_piece p, int from[2], int dist_x, int dist_y);
@@ -81,7 +87,10 @@ int queen(t_piece p, t_move move);
 int king(t_piece p, t_move move);
 
 // castling.c
-int	castling(char *san, char **move);
+int	do_castle(t_move move);
+int	undo_castle(t_move move);
+int	castling_verif(t_piece p, t_move move);
+int	uncastling(t_piece p, t_move move);
 
 // conversion.c
 char	*san_to_coord(char *move_str);

@@ -1,19 +1,5 @@
 #include "chess.h"
 
-char    *color_bg(char *name)
-{
-    if (!name)
-        return ("\e[0m");
-    if (!strcmp(name, "cyan"))
-        return ("\e[46m");
-    if (!strcmp(name, "black"))
-        return ("\e[40m");
-    if (!strcmp(name, "white"))
-        return("\e[47m");
-    if (!strcmp(name, "purple"))
-        return ("\e[45m");
-    return ("\e[0m");
-}
 char    *color(char *name)
 {
     if (!name)

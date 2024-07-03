@@ -13,7 +13,8 @@ MOVE		= move/move.c \
 			  move/conversion.c \
 			  move/utils.c
 
-UTILS		= utils/command.c
+UTILS		= utils/command.c \
+			  utils/promotion.c
 
 OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o)
 

@@ -51,6 +51,7 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 char	*san_to_coord(char *san)
 {
 	t_move	tmp;
+	int		row[2] = {0, 7};
     char	piece;
     char    *move;
 	int		takes;
@@ -65,7 +66,16 @@ char	*san_to_coord(char *san)
         return (0);
     if (!strcmp(san, "O-O") || !strcmp(san, "O-O-O"))
 	{
-		castling(san, &move);
+		move[0] = 'e';
+		move[1] = '1' + row[move_count % 2];
+		move[2] = 'O';
+		if (!strcmp(san, "O-O"))
+			move[3] = '\0';
+		else
+		{
+			move[3] = 'O';
+			move[4] = '\0';
+		}
 		return (move);
 	}
 	len = 0;
@@ -75,7 +85,12 @@ char	*san_to_coord(char *san)
 			takes++;
 		len++;
 	}
-    move[2] = san[len - 2];
+	if (san[len - 2] == '=')
+	{
+		promote_to = san[len - 1];
+		len -= 2;
+	}
+	move[2] = san[len - 2];
     move[3] = san[len - 1];
     move[4] = '\0';
 	if (is_piece(san[0]))
@@ -133,11 +148,20 @@ int	str_to_move(char *move_str, t_move *move)
 
 int	convert_coord(char *move_str, t_move *move)
 {
-    (*move).from[0] = move_str[1] - '1';
-	(*move).from[1] = move_str[0] - 'a';
-    (*move).from[0] += 7 - ((*move).from[0] * 2);
-    (*move).to[0] = move_str[3] - '1';
-	(*move).to[1] = move_str[2] - 'a';
-	(*move).to[0] += 7 - ((*move).to[0] * 2);
+    move->from[0] = move_str[1] - '1';
+	move->from[1] = move_str[0] - 'a';
+    move->from[0] += 7 - (move->from[0] * 2);
+    if (move_str[2] == 'O')
+	{
+		move->to[0] = 9;
+		if (move_str[3] == 'O')
+			move->to[1] = 9;
+		else
+			move->to[1] = 0;
+		return (0);
+	}
+	move->to[0] = move_str[3] - '1';
+	move->to[1] = move_str[2] - 'a';
+	move->to[0] += 7 - (move->to[0] * 2);
 	return (0);
 }

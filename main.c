@@ -1,6 +1,7 @@
 #include "chess.h"
 
-int			check = 0;
+int			en_passant[2][8] = {{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}};
+int			can_castle[2][2] = {{1, 1}, {1, 1}};
 int			move_count = 0;
 t_square	board[8][8] = {
 	{{{'r', 'b'}, 'w'}, {{'n', 'b'}, 'b'}, {{'b', 'b'}, 'w'}, {{'q', 'b'}, 'b'}, {{'k', 'b'}, 'w'}, {{'b', 'b'}, 'b'}, {{'n', 'b'}, 'w'}, {{'r', 'b'}, 'b'}},
@@ -14,7 +15,9 @@ t_square	board[8][8] = {
 };
 char		player = 'w';
 t_piece		piece_taken;
-t_move		last_move;
+t_move		last_move = {{9, 9}, {9, 9}};
+char		promote_to;
+int			move_chess = 1;
 
 int	update_board(t_move move)
 {
@@ -64,44 +67,16 @@ void	print_board(void)
 	printf("%s  a b c d e f g h%s\n", color(COORD_COLOR), color(0));
 }
 
-void	print_board_colored(void)
-{
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < 8)
-	{
-		printf("%s%c%s", color(COORD_COLOR), '8' - i, color(0));
-		j = 0;
-		while (j < 8)
-		{
-			if (board[i][j].square_color == 'w')
-				printf("%s", color_bg(WHITE_BG));
-			else
-				printf("%s", color_bg(BLACK_BG));
-			if (!board[i][j].piece.name)
-				printf("   ");
-			else if (board[i][j].piece.team == player && board[i][j].piece.name == 'k' && my_piece_is_attacked(i, j))
-				printf("%s %c %s", color("red"), board[i][j].piece.name, color(0));
-			else if (board[i][j].piece.team == 'w')
-				printf("%s %c %s", color(WHITE_COLOR), board[i][j].piece.name, color(0));
-			else
-				printf("%s %c %s", color(BLACK_COLOR), board[i][j].piece.name, color(0));
-			printf("%s", color_bg(0));
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
-	printf("%s  a  b  c  d  e  f  g  h%s\n", color(COORD_COLOR), color(0));
-}
-
 int	verif_input(char *move)
 {
 	int	len;
 
 	len = strlen(move);
+	if (move[len - 2] == '=' && is_piece(move[len - 1]))
+	{
+		promote_to = move[len - 1];
+		len -= 2;
+	}
 	if (len > 5)
 		return (1);
 	if (len == 2 && inside_board(move[0], move[1]))
@@ -113,6 +88,8 @@ int	verif_input(char *move)
 		return (0);
 	if (len == 5 && is_piece(move[0]) && ((move[1] >= 'a' && move[1] <= 'h') || (move[1] >= '1' && move[1] <= '8')) &&
 		move[2] == 'x' && inside_board(move[3], move[4]))
+		return (0);
+	if (!strcmp(move, "O-O") || !strcmp(move, "O-O-O"))
 		return (0);
 	return (1);
 }
@@ -133,7 +110,7 @@ int	can_move(int x, int y)
 		while (j < 8)
 		{
 			move.to[1] = j;
-			if (!do_move(move))
+			if (!do_move(&move))
 			{
 				undo_move(move);
 				// printf("move : %i %i to %i %i possible\n", move.from[0], move.from[1], move.to[0], move.to[1]);
@@ -167,6 +144,69 @@ int	checkmate(void)
 	return (0);
 }
 
+int	verif_check(void)
+{
+	t_piece tmp_p;
+	int		tmp_ep[2][8];
+	int	i;
+
+	i = 0;
+	while (i < 8)
+	{
+		tmp_ep[(move_count) % 2][i] = en_passant[(move_count) % 2][i];
+		i++;
+	}
+	tmp_p = piece_taken;
+	if (!checkmate())
+	{
+		printf("%sCHECKMATE%s\n", color("green"), color(0));
+		print_board();
+		return (1);
+	}
+	if (king_under_attack())
+		printf("(%sCHECK%s)", color("green"), color(0));
+	piece_taken = tmp_p;
+	i = 0;
+	while (i < 8)
+	{
+		en_passant[(move_count) % 2][i] = tmp_ep[(move_count) % 2][i];
+		i++;
+	}
+	return (0);
+}
+
+int	reset_en_passant(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < 8)
+	{
+		en_passant[(move_count) % 2][i] = 0;
+		i++;
+	}
+	return (0);
+}
+
+void print_en_passant(void)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < 2)
+	{
+		j = 0;
+		while (j < 8)
+		{
+			printf("%i ", en_passant[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
+
 int	main(void)
 {
 	char	team[2][6] = {
@@ -176,35 +216,29 @@ int	main(void)
 	char	input[10];
 	t_move	move;
 	
-	last_move.from[0] = 9;
 	while (1)
 	{
-		piece_taken.name = 0;
-		piece_taken.team = 0;
 		player = *team[move_count % 2];
-		// print_board();
-		printf("(%i) %s move: ", move_count + 1, team[move_count % 2]);
+		if (verif_check())
+			return (0);
+		printf("(%i) %s move: ", move_chess, team[move_count % 2]);
 		scanf("%s9", input);
 		if (input[0] == '/')
 			special_command(input);
-		else if (verif_input(input))
-			printf("%sBAD SYNTAX%s\n", color("red"), color(0));
-		else if (str_to_move(input, &move) || do_move(move))
-			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
 		else
 		{
-			change_player();
-			if (!checkmate())
+			reset_en_passant();
+			if (verif_input(input))
+				printf("%sBAD SYNTAX%s\n", color("red"), color(0));
+			else if (str_to_move(input, &move) || do_move(&move))
+				printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
+			else
 			{
-				printf("%sCHECKMATE%s\n", color("green"), color(0));
-				print_board();
-				return (0);
+				last_move = move;
+				if (player == 'b')
+					move_chess++;
+				move_count++;
 			}
-			if (king_under_attack())
-				printf("%sCHECK%s\n", color("green"), color(0));
-			change_player();
-			last_move = move;
-			move_count++;
 		}
 	}
 	return (0);

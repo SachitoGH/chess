@@ -22,12 +22,15 @@ int	special_command(char *input)
 	}
 	else if (!strcmp(input, "/undo"))
 	{
-		if (last_move.from[0] != 9) 
+		if (last_move.from[1] != 9) 
 		{
-			undo_move(last_move);
-			last_move.from[0] = 9;
 			move_count--;
+			player = *team[move_count % 2];
+			undo_move(last_move);
+			last_move.from[1] = 9;
 			printf("%sUndo %s's last move%s\n", color("cyan"), team[move_count % 2], color(0));
+			if (player == 'b')
+				move_chess--;
 		}
 		else
 			printf("%scan't undo%s\n", color("red"), color(0));
