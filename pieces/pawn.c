@@ -9,6 +9,7 @@ int	do_en_passant(t_move move)
 	board[move.to[0]][move.to[1]].piece = board[en_passant_row[move_count % 2]][move.to[1]].piece;
 	board[en_passant_row[move_count % 2]][move.to[1]].piece.name = 0;
 	board[en_passant_row[move_count % 2]][move.to[1]].piece.team = 0;
+	return (0);
 }
 
 int	pawn(t_piece p, t_move move)

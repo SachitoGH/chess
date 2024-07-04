@@ -13,28 +13,13 @@ int	special_command(char *input)
 	{
 		printf("%s", color("cyan"));
 		printf("command list:\n");
-		printf("/undo : undo last move (max 1 move)\n");
+		printf("/eval : give an evaluation of the board\n");
 		printf("/board : print the board\n");
 		printf("/exit : exit the game\n");
 		printf("/move : move arbitrary a piece on the board\n");
 		printf("/draw : draw the game\n");
 		printf("%s", color(0));
 	}
-	// else if (!strcmp(input, "/undo"))
-	// {
-	// 	if (last_move.from[1] != 9) 
-	// 	{
-	// 		move_count--;
-	// 		player = *team[move_count % 2];
-	// 		undo_move(last_move);
-	// 		last_move.from[1] = 9;
-	// 		printf("%sUndo %s's last move%s\n", color("cyan"), team[move_count % 2], color(0));
-	// 		if (player == 'b')
-	// 			move_chess--;
-	// 	}
-	// 	else
-	// 		printf("%scan't undo%s\n", color("red"), color(0));
-	// }
 	else if (!strcmp(input, "/board"))
 		print_board();
 	else if (!strcmp(input, "/move"))
@@ -48,6 +33,10 @@ int	special_command(char *input)
 			convert_coord(input_2, &move);
 			update_board(move);
 		}
+	}
+	else if (!strcmp(input, "/eval"))
+	{
+		printf("%sEvaluation: %i\n%s", color("cyan"), evaluation(), color(0));
 	}
 	else if (!strcmp(input, "/draw"))
 	{

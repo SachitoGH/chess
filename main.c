@@ -24,6 +24,7 @@ int get_player_move(t_move *move)
 		{"black"},
 	};
 
+	print_board();
 	printf("(%i) %s move: ", move_chess, team[move_count % 2]);
 	scanf("%s9", input);
 	if (input[0] == '/')
@@ -60,7 +61,6 @@ int	main(void)
 		if (player != *team[move_count % 2])
     	{
 			// printf("score: %i\n", evaluation());
-			print_board();
 			player = *team[move_count % 2];
 			verif_check();
 			reset_en_passant();
@@ -68,7 +68,7 @@ int	main(void)
 		if (player == 'w')
 			ret = get_player_move(&move);
 		else if (player == 'b')
-			ret = get_player_move(&move);	
+			ret = get_ia_move(&move);	
 		if (!ret && do_move(&move))
 		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
