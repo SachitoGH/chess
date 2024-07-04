@@ -7,7 +7,6 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 
 	if ((piece == 'p' && len < 3 + takes) || (piece != 'p' && len < 4 + takes)) 
 	{
-		printf("bv\n");
 		return (1);
 	}
 	if (san[1] >= 'a' && san[1] <= 'h')
@@ -165,11 +164,13 @@ char	*san_to_coord(char *san)
 }
 int	str_to_move(char *move_str, t_move *move)
 {
+	save_data(0);
 	move_str = san_to_coord(move_str);
 	if (!move_str)
 		return (1);
 	convert_coord(move_str, move);
 	free(move_str);
+	save_data(1);
 	return (0);
 }
 

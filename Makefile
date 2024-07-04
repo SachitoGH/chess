@@ -18,7 +18,8 @@ UTILS		= utils/command.c \
 			  utils/conversion.c \
 			  utils/utils.c
 
-STOCKFISH	= stockfish/random.c
+STOCKFISH	= stockfish/random.c \
+			  stockfish/evaluation.c
 
 OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o) $(PIECES:.c=.o) $(STOCKFISH:.c=.o)
 

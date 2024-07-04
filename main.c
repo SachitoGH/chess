@@ -1,5 +1,4 @@
 #include "chess.h"
-
 int			en_passant[2][8] = {{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}};
 int			can_castle[2][2] = {{1, 1}, {1, 1}};
 int			move_count = 0;
@@ -14,8 +13,6 @@ t_square	board[8][8] = {
     {{{'r', 'w'}, 'b'}, {{'n', 'w'}, 'w'}, {{'b', 'w'}, 'b'}, {{'q', 'w'}, 'w'}, {{'k', 'w'}, 'b'}, {{'b', 'w'}, 'w'}, {{'n', 'w'}, 'b'}, {{'r', 'w'}, 'w'}}
 };
 char		player = 0;
-t_piece		piece_taken;
-t_move		last_move = {{9, 9}, {9, 9}};
 char		promote_to;
 int			move_chess = 1;
 
@@ -56,11 +53,13 @@ int	main(void)
 	t_move	move;
 	int		ret;
 	
+	srand(time(NULL));
 	while (1)
 	{
 		ret = 0;
 		if (player != *team[move_count % 2])
     	{
+			// printf("score: %i\n", evaluation());
 			print_board();
 			player = *team[move_count % 2];
 			verif_check();
@@ -69,15 +68,22 @@ int	main(void)
 		if (player == 'w')
 			ret = get_player_move(&move);
 		else if (player == 'b')
-			ret = get_ia_move(&move);	
+			ret = get_player_move(&move);	
 		if (!ret && do_move(&move))
+		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
+			print_board();
+		}
 		else if (!ret)
 		{
-			last_move = move;
 			if (player == 'b')
 				move_chess++;
 			move_count++;
+			if (move_chess > 1000)
+			{
+				printf("+1000 coups\n");
+				return(0);
+			}
 		}
 	}
 	return (0);

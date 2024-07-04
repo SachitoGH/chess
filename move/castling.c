@@ -23,35 +23,6 @@ int	uncastling(t_piece p, t_move move)
 	return (0);
 }
 
-int	undo_castle(t_move move)
-{
-	t_move tmp;
-	int	row[2] = {7, 0};
-
-	tmp.from[0] = row[move_count % 2];
-	tmp.to[0] = row[move_count % 2];
-	if (move.to[1] == 0)
-	{
-		tmp.from[1] = 6;
-		tmp.to[1] = 4;
-		update_board(tmp);
-		tmp.from[1] = 5;
-		tmp.to[1] = 7;
-		update_board(tmp);
-		can_castle[move_count % 2][1] = 1;
-	}
-	if (move.to[1] == 1)
-	{
-		tmp.from[1] = 2;
-		tmp.to[1] = 4;
-		update_board(tmp);
-		tmp.from[1] = 3;
-		tmp.to[1] = 0;
-		update_board(tmp);
-		can_castle[move_count % 2][0] = 1;
-	}
-	return (0);
-}
 int	do_castle(t_move move)
 {
 	t_move tmp;

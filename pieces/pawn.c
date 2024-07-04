@@ -1,29 +1,5 @@
 #include "chess.h"
 
-int	undo_en_passant(t_move move)
-{
-	t_move undo;
-
-	printf("bv\n");
-	if (player == 'w')
-	{
-		board[move.to[0] + 1][move.to[1]].piece.name = 'p';
-		board[move.to[0] + 1][move.to[1]].piece.team = 'b';
-	}
-	if (player == 'b')
-	{
-		board[move.to[0] - 1][move.to[1]].piece.name = 'p';
-		board[move.to[0] - 1][move.to[1]].piece.team = 'w';
-	}
-	en_passant[(move_count % 2) + 1][move.to[1]] = 1;
-	undo.from[0] = move.to[0];
-	undo.from[1] = move.to[1];
-	undo.to[0] = move.from[0];
-	undo.to[1] = move.from[1];
-	update_board(undo);
-	return (0);
-}
-
 int	pawn(t_piece p, t_move move)
 {
 	int	dist_x;
@@ -60,9 +36,9 @@ int	pawn(t_piece p, t_move move)
 				en_passant_row[0]++;
 				en_passant_row[1]--;
 				board[move.to[0]][move.to[1]].piece = board[en_passant_row[move_count % 2]][move.to[1]].piece;
-				board[en_passant_row[move_count % 2]][move.to[1]].piece.name =  0;
-				board[en_passant_row[move_count % 2]][move.to[1]].piece.team =  0;
-				en_passant[(move_count + 1) % 2][move.to[1]] = 2;
+				board[en_passant_row[move_count % 2]][move.to[1]].piece.name = 0;
+				board[en_passant_row[move_count % 2]][move.to[1]].piece.team = 0;
+				return (0);
 			}
 			// check the piece exist and isnt in the the team of the pawn
 			if (board[move.to[0]][move.to[1]].piece.name && (board[move.to[0]][move.to[1]].piece.team != p.team))

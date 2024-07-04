@@ -172,18 +172,60 @@ int	verif_input(char *move)
 	return (1);
 }
 
+int	verif_kings(void)
+{
+	int	i;
+	int	j;
+	int	king;
+	int pieces;
+
+	king = 0;
+	pieces = 0;
+	i = 0;
+	while (i < 8)
+	{
+		j = 0;
+		while (j < 8)
+		{
+			if (board[i][j].piece.name)
+			{
+				if (board[i][j].piece.name == 'k')
+					king++;
+				pieces++;
+			}
+			if (king == 2 && pieces > 2)
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	verif_check(void)
 {
   	int 	legal;
+	char	team[2][6] = {
+		{"BLACK"},
+		{"WHITE"},
+	};
 
 	save_data(0);
+	if (verif_kings())
+	{
+		printf("%sDRAW%s\n", color("green"), color(0));
+		printf("[%i]\n", move_chess);
+		print_board();
+		exit(0);
+	}
   	legal = search_legal_move();
 	if (king_under_attack())
   	{
     	if (!legal)
     	{               
-    		printf("%sCHECKMATE%s\n", color("green"), color(0));
-   			print_board();
+    		printf("%sCHECKMATE %s WIN%s\n", color("green"), team[move_count % 2], color(0));
+   			printf("[%i]\n", move_chess);
+			print_board();
     		exit(0);                                  
     	}
     	else
@@ -192,7 +234,8 @@ int	verif_check(void)
   	if (!legal)
 	{
     	printf("%sSTALEMATE%s\n", color("green"), color(0));
-    	print_board();
+    	printf("[%i]\n", move_chess);
+		print_board();
     	exit(0);
 	}
 	save_data(1);
@@ -214,7 +257,6 @@ int	reset_en_passant(void)
 
 int save_data(int mode)
 {
-	static t_piece	p;
 	static int 		ep[2][8];
 	static int 		cc[2][2];
 	int	i;
@@ -222,10 +264,9 @@ int save_data(int mode)
 	i = 0;
 	if (mode == 0)
 	{
-		p = piece_taken;
 		while (i < 8)
 		{
-			ep[(move_count) % 2][i] = en_passant[(move_count) % 2][i];
+			ep[(move_count % 2) + 1][i] = en_passant[(move_count % 2) + 1][i];
 			i++;
 		}
 		i = 0;
@@ -237,10 +278,9 @@ int save_data(int mode)
 	}
 	else if (mode == 1)
 	{
-		piece_taken = p;
 		while (i < 8)
 		{
-			en_passant[(move_count) % 2][i] = ep[(move_count) % 2][i];
+			en_passant[(move_count % 2) + 1][i] = ep[(move_count % 2) + 1][i];
 			i++;
 		}
 		i = 0;

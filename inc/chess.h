@@ -38,12 +38,13 @@ extern int		move_count;
 extern int		move_chess;
 extern t_square	board[8][8];
 extern char		player;
-extern	t_move	last_move;
-extern t_piece	piece_taken;
 extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
 
-// engine
+// stockfish
 int	get_ia_move(t_move *move);
+
+// evaluation.c
+int evaluation(void);
 
 // utils
 // command.c
@@ -74,30 +75,27 @@ int 	save_data(int mode);
 // move
 // move.c
 int	update_board(t_move move);
-int	undo_move(t_move move);
 int	do_move(t_move *move);
+void clone_board(t_square clone[8][8], int mode);
 
 // promotion.c
 int	promotion(t_move *move);
-int	undo_promotion(t_move move);
 
 // castling.c
 int	do_castle(t_move move);
-int	undo_castle(t_move move);
 int	castling_verif(t_piece p, t_move move);
 int	uncastling(t_piece p, t_move move);
 
 // legal.c
 int	is_legal_move(t_move move);
 int	get_move(t_move *move, int count);
-int	can_move(t_move *move);
+int	can_move(t_move *move, t_square clone[8][8]);
 int	search_legal_move(void);
 
 
 // pieces
 // pawn.c
 int	pawn(t_piece p, t_move move);
-int	undo_en_passant(t_move move);
 
 // bishop.c
 int	move_diag(t_piece p, int from[2], int dist_x, int dist_y);
