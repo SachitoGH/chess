@@ -1,5 +1,16 @@
 #include "chess.h"
 
+int	do_en_passant(t_move move)
+{
+	int	en_passant_row[2] = {2, 5};
+
+	en_passant_row[0]++;
+	en_passant_row[1]--;
+	board[move.to[0]][move.to[1]].piece = board[en_passant_row[move_count % 2]][move.to[1]].piece;
+	board[en_passant_row[move_count % 2]][move.to[1]].piece.name = 0;
+	board[en_passant_row[move_count % 2]][move.to[1]].piece.team = 0;
+}
+
 int	pawn(t_piece p, t_move move)
 {
 	int	dist_x;
@@ -33,11 +44,7 @@ int	pawn(t_piece p, t_move move)
 			// en passant
 			if (move.to[0] == en_passant_row[move_count % 2] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
 			{
-				en_passant_row[0]++;
-				en_passant_row[1]--;
-				board[move.to[0]][move.to[1]].piece = board[en_passant_row[move_count % 2]][move.to[1]].piece;
-				board[en_passant_row[move_count % 2]][move.to[1]].piece.name = 0;
-				board[en_passant_row[move_count % 2]][move.to[1]].piece.team = 0;
+				do_en_passant(move);
 				return (0);
 			}
 			// check the piece exist and isnt in the the team of the pawn
