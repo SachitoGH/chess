@@ -3,20 +3,24 @@ NAME        = chess
 MAIN        = main.c
 
 MOVE		= move/move.c \
-			  move/pawn.c \
-			  move/bishop.c \
-			  move/knight.c \
-			  move/rook.c \
-			  move/queen.c \
-			  move/king.c \
 			  move/castling.c \
-			  move/conversion.c \
-			  move/utils.c
+			  move/legal.c \
+			  move/promotion.c
+
+PIECES		= pieces/pawn.c \
+			  pieces/bishop.c \
+			  pieces/knight.c \
+			  pieces/rook.c \
+			  pieces/queen.c \
+			  pieces/king.c
 
 UTILS		= utils/command.c \
-			  utils/promotion.c
+			  utils/conversion.c \
+			  utils/utils.c
 
-OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o)
+STOCKFISH	= stockfish/random.c
+
+OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o) $(PIECES:.c=.o) $(STOCKFISH:.c=.o)
 
 CC          = gcc
 

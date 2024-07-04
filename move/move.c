@@ -1,100 +1,11 @@
 #include "chess.h"
 
-int	is_legal_move(t_move move)
+int	update_board(t_move move)
 {
-	t_piece	p;
-	int		res;
-	
-	p = board[move.from[0]][move.from[1]].piece;
-	if (!p.name || p.team != player)
-		return (1);
-	res = 0;
-	if (p.name == 'p')
-		res = pawn(p, move);
-	if (p.name == 'r')
-		res = rook(p, move);
-	if (p.name == 'n')
-		res = knight(p, move);
-	if (p.name == 'b')
-		res = bishop(p, move);
-	if (p.name == 'q')
-		res = queen(p, move);
-	if (p.name == 'k')
-		res = king(p, move);
-	if (res)
-		return (1);
-	return (0);
-}
+	t_square	empty = {{0, 0}, board[move.from[0]][move.from[1]].square_color};
 
-int	locate_king(char team, int king_pos[2])
-{
-	t_piece	piece;
-	int		i;
-	int		j;
-
-	i = 0;
-	while (i < 8) 
-	{
-		j = 0;
-		while (j < 8)
-		{
-			piece = board[i][j].piece;
-			if (piece.name == 'k' && piece.team == team)
-			{
-				king_pos[0] = i;
-				king_pos[1] = j;
-				return (0);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
-}
-int	my_piece_is_attacked(int pos_x, int pos_y)
-{
-	int	i;
-	int	j;
-	t_move move;
-
-	change_player();
-	move.to[0] = pos_x;
-	move.to[1] = pos_y;
-	i = 0;
-	while (i < 8)
-	{
-		move.from[0] = i;
-		j = 0;
-		while (j < 8)
-		{
-			move.from[1] = j;
-			if (!is_legal_move(move))
-			{
-				change_player();
-				return (1);
-			}
-			j++;
-		}
-		i++;
-	}
-	change_player();
-	return (0);
-}
-void	change_player(void)
-{
-	if (player == 'w')
-		player = 'b';
-	else
-		player = 'w';
-}
-
-int king_under_attack(void)
-{
-	int		king_pos[2];
-
-	locate_king(player, king_pos);
-	if (my_piece_is_attacked(king_pos[0], king_pos[1]))
-		return (1);
+	board[move.to[0]][move.to[1]].piece = board[move.from[0]][move.from[1]].piece;
+	board[move.from[0]][move.from[1]] = empty;
 	return (0);
 }
 

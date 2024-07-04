@@ -6,6 +6,7 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <string.h>
+# include <time.h>
 
 # define WHITE_COLOR "white"
 # define BLACK_COLOR "purple"
@@ -41,33 +42,62 @@ extern	t_move	last_move;
 extern t_piece	piece_taken;
 extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
 
-// main.c
-int	update_board(t_move move);
-void	print_board(void);
-int	verif_input(char *move);
+// engine
+int	get_ia_move(t_move *move);
 
 // utils
 // command.c
-int	special_command(char *input);
+int		special_command(char *input);
+
+// conversion.c
+char	*san_to_coord(char *move_str);
+int		str_to_move(char *move_str, t_move *move);
+int		convert_coord(char *move_str, t_move *move);
+
+// utils
+int		update_board(t_move move);
+void	print_board(void);
+int		verif_input(char *move);
+int 	save_data(int mode);
+char    *color(char *name);
+char    *color_bg(char *name);
+int 	inside_board(char letter, char number);
+int 	is_piece(char p);
+int		locate_king(char team, int king_pos[2]);
+int		my_piece_is_attacked(int pos_x, int pos_y);
+void	change_player(void);
+int 	king_under_attack(void);
+int		verif_check(void);
+int		reset_en_passant(void);
+int 	save_data(int mode);
+
+// move
+// move.c
+int	update_board(t_move move);
+int	undo_move(t_move move);
+int	do_move(t_move *move);
 
 // promotion.c
 int	promotion(t_move *move);
 int	undo_promotion(t_move move);
 
-// move
-// move.c
-int	is_legal_move(t_move move);
-int	undo_move(t_move move);
-int	do_move(t_move *move);
-int	my_piece_is_attacked(int pos_x, int pos_y);
-void	change_player(void);
-int	locate_king(char team, int king_pos[2]);
-int king_under_attack(void);
+// castling.c
+int	do_castle(t_move move);
+int	undo_castle(t_move move);
+int	castling_verif(t_piece p, t_move move);
+int	uncastling(t_piece p, t_move move);
 
+// legal.c
+int	is_legal_move(t_move move);
+int	get_move(t_move *move, int count);
+int	can_move(t_move *move);
+int	search_legal_move(void);
+
+
+// pieces
 // pawn.c
 int	pawn(t_piece p, t_move move);
 int	undo_en_passant(t_move move);
-
 
 // bishop.c
 int	move_diag(t_piece p, int from[2], int dist_x, int dist_y);
@@ -85,22 +115,5 @@ int queen(t_piece p, t_move move);
 
 // king.c
 int king(t_piece p, t_move move);
-
-// castling.c
-int	do_castle(t_move move);
-int	undo_castle(t_move move);
-int	castling_verif(t_piece p, t_move move);
-int	uncastling(t_piece p, t_move move);
-
-// conversion.c
-char	*san_to_coord(char *move_str);
-int	str_to_move(char *move_str, t_move *move);
-int	convert_coord(char *move_str, t_move *move);
-
-// utils.c
-char    *color(char *name);
-char    *color_bg(char *name);
-int inside_board(char letter, char number);
-int is_piece(char p);
 
 #endif

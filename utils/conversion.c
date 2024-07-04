@@ -5,8 +5,11 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 	int	i;
 	int	j;
 
-	if ((piece == 'p' && len < 3 + takes) || (len < 4 + takes)) 
+	if ((piece == 'p' && len < 3 + takes) || (piece != 'p' && len < 4 + takes)) 
+	{
+		printf("bv\n");
 		return (1);
+	}
 	if (san[1] >= 'a' && san[1] <= 'h')
 	{
 		tmp.from[1] = san[1] - 'a';
@@ -46,7 +49,27 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 	return (1);
 }
 
+int		san_pawn(char **move, char *san, t_move tmp)
+{
+	int		i;
+	int		j;
 
+	j = san[0] - 'a';
+	tmp.from[1] = j;
+	(*move)[0] = san[0];
+	i = 0;
+	while (i < 8)
+	{
+		tmp.from[0] = i;
+		if (board[i][j].piece.team == player && board[i][j].piece.name == 'p' && !is_legal_move(tmp))
+		{
+			(*move)[1] = '8' - i;
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
 
 char	*san_to_coord(char *san)
 {
@@ -93,13 +116,17 @@ char	*san_to_coord(char *san)
 	move[2] = san[len - 2];
     move[3] = san[len - 1];
     move[4] = '\0';
-	if (is_piece(san[0]))
-		piece = san[0] += 32;
-	else
-		piece = 'p';
 	tmp.to[1] = move[2] - 'a';
 	tmp.to[0] = move[3] - '1';
 	tmp.to[0] += 7 - (tmp.to[0] * 2);
+	if (is_piece(san[0]))
+		piece = san[0] += 32;
+	else
+	{
+		if (san_pawn(&move, san, tmp))
+			return (move);
+		return (0);
+	}
 	found = 0;
 	i = 0;
 	while (i < 8)
