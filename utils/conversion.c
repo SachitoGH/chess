@@ -167,11 +167,11 @@ int	str_to_move(char *move_str, t_move *move)
 	save_data(0);
 	move_str = san_to_coord(move_str);
 	if (!move_str)
-		return (1);
+		return (0);
 	convert_coord(move_str, move);
 	free(move_str);
 	save_data(1);
-	return (0);
+	return (1);
 }
 
 int	convert_coord(char *move_str, t_move *move)

@@ -2,10 +2,10 @@
 
 int	special_command(char *input)
 {
-	char	team[2][6] = {
-		{"white"},
-		{"black"},
-	};
+	// char	team[2][6] = {
+	// 	{"white"},
+	// 	{"black"},
+	// };
 	char	input_2[10];
 	t_move	move;
 

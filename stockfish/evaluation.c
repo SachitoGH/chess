@@ -37,3 +37,27 @@ int evaluation(void)
     }
     return (score);
 }
+
+int evaluation_current(void)
+{
+    int score;
+    int i;
+    int j;
+
+    score = 0;
+    i = 0;
+    while (i < 8)
+    {
+        j = 0;
+        while (j < 8)
+        {
+            if (board[i][j].piece.team == player)
+                score += get_piece_value(board[i][j].piece.name);
+            else if (board[i][j].piece.team != player && board[i][j].piece.team != 0)
+                score -= get_piece_value(board[i][j].piece.name);
+            j++;
+        }
+        i++;
+    }
+    return (score);
+}

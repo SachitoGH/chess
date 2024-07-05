@@ -4,7 +4,7 @@ int	is_legal_move(t_move move)
 {
 	t_piece	p;
 	int		res;
-	
+
 	p = board[move.from[0]][move.from[1]].piece;
 	if (!p.name || p.team != player)
 		return (1);
@@ -26,117 +26,54 @@ int	is_legal_move(t_move move)
 	return (0);
 }
 
-int	is_the_move(t_move *move, int *count, t_square clone[8][8])
+int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b)
 {
-	int		i;
-	int		j;
+    int i, j;
 
+    save_data(0);
 	i = 0;
-	save_data(0);
-	while (i < 8)
-	{
-		move->to[0] = i; 
-		j = 0;
-		while (j < 8)
-		{
-			move->to[1] = j;
-			if (!do_move(move))
-			{
-				clone_board(clone, 1);
-				save_data(1);
-				(*count)--;
-			}
-			if (*count == 0)
-				return (1);
-			j++;
-		}
-		i++;
-	}
-	save_data(1);
-	return (0);
+    while (i < 8)
+    {
+        j = 0;
+        while (j < 8)
+        {
+	        move[*count].from[0] = a;
+            move[*count].from[1] = b;
+			move[*count].to[0] = i; 
+            move[*count].to[1] = j;
+            if (do_move(move[*count]))
+            {
+                clone_board(clone, 1);                
+                (*count)++;
+            }
+            save_data(1);
+            j++;
+        }
+        i++;
+    }
+    return 0;
 }
 
-int	can_move(t_move *move, t_square clone[8][8])
+int generate_legal_move(t_move move[218])
 {
-	int		i;
-	int		j;
-	int		count;
+    t_square clone[8][8];
+    int count;
+    int i, j;
 
-	count = 0;
-	i = 0;
-	save_data(0);
+    count = 0;
+    i = 0;
+    clone_board(clone, 0);
 
-	while (i < 8)
-	{
-		move->to[0] = i; 
-		j = 0;
-		while (j < 8)
-		{
-			move->to[1] = j;
-			if (!do_move(move))
-			{
-				clone_board(clone, 1);				
-				count++;
-			}
-			save_data(1);
-			j++;
-		}
-		i++;
-	}
-	return (count);
-}
-
-int	search_legal_move(void)
-{
-	t_move move;
-	t_square clone[8][8];
-	int legal_move;
-	int	i;
-	int	j;
-
-	legal_move = 0;
-	i = 0;
-	clone_board(clone, 0);
-	while (i < 8)
-	{
-		move.from[0] = i;
-		j = 0;
-		while (j < 8)
-		{
-			move.from[1] = j;
-			if (board[i][j].piece.team == player)
-				legal_move += can_move(&move, clone);
-			j++;
-		}
-		i++;
-	}
-	return (legal_move);
-}
-
-
-int	get_move(t_move *move, int count)
-{
-	t_square clone[8][8];
-	int	i;
-	int	j;
-
-	i = 0;
-	clone_board(clone, 0);
-	while (i < 8)
-	{
-		move->from[0] = i;
-		j = 0;
-		while (j < 8)
-		{
-			move->from[1] = j;
-			if (board[i][j].piece.team == player)
-			{
-				if (is_the_move(move, &count, clone))
-					return(0);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (1);
+    while (i < 8)
+    {
+        j = 0;
+        while (j < 8)
+        {
+            if (board[i][j].piece.team == player)
+                can_move(move, &count, clone, i, j);
+            j++;
+        }
+        i++;
+    }
+    return count;
 }

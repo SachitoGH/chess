@@ -19,13 +19,14 @@ UTILS		= utils/command.c \
 			  utils/utils.c
 
 STOCKFISH	= stockfish/random.c \
+			  stockfish/minimax.c \
 			  stockfish/evaluation.c
 
 OBJS        = $(MAIN:.c=.o) $(MOVE:.c=.o) $(UTILS:.c=.o) $(PIECES:.c=.o) $(STOCKFISH:.c=.o)
 
 CC          = gcc
 
-CFLAGS      = -Wall -Wextra
+CFLAGS      = -Wall -Wextra -g
 
 INC         = -I./inc/
 

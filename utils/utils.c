@@ -88,12 +88,16 @@ int	my_piece_is_attacked(int pos_x, int pos_y)
 	change_player();
 	return (0);
 }
-void	change_player(void)
+int	change_player(void)
 {
 	if (player == 'w')
+	{
 		player = 'b';
+		return (1);
+	}
 	else
 		player = 'w';
+	return (0);
 }
 
 int king_under_attack(void)
@@ -156,20 +160,20 @@ int	verif_input(char *move)
 		len -= 2;
 	}
 	if (len > 5)
-		return (1);
+		return (0);
 	if (len == 2 && inside_board(move[0], move[1]))
-		return (0);
+		return (1);
 	if (len == 3 && is_piece(move[0]) && inside_board(move[1], move[2]))
-		return (0);
+		return (1);
 	if (len == 4 && ((is_piece(move[0]) && inside_board(move[2], move[3])) ||
 		((move[0] >= 'a' && move[0] <= 'h') && move[1] == 'x' && inside_board(move[2], move[3]))))
-		return (0);
+		return (1);
 	if (len == 5 && is_piece(move[0]) && ((move[1] >= 'a' && move[1] <= 'h') || (move[1] >= '1' && move[1] <= '8')) &&
 		move[2] == 'x' && inside_board(move[3], move[4]))
-		return (0);
+		return (1);
 	if (!strcmp(move, "O-O") || !strcmp(move, "O-O-O"))
-		return (0);
-	return (1);
+		return (1);
+	return (0);
 }
 
 int	verif_kings(void)
@@ -204,6 +208,7 @@ int	verif_kings(void)
 
 int	verif_check(void)
 {
+	t_move  moves[218];
   	int 	legal;
 	char	team[2][6] = {
 		{"BLACK"},
@@ -218,7 +223,7 @@ int	verif_check(void)
 		print_board();
 		exit(0);
 	}
-  	legal = search_legal_move();
+  	legal = generate_legal_move(moves);
 	if (king_under_attack())
   	{
     	if (!legal)

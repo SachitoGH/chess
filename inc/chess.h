@@ -7,6 +7,7 @@
 # include <signal.h>
 # include <string.h>
 # include <time.h>
+# include <limits.h>
 
 # define WHITE_COLOR "white"
 # define BLACK_COLOR "purple"
@@ -41,9 +42,14 @@ extern char		player;
 extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
 
 // stockfish
-int	get_ia_move(t_move *move);
+// minimax.c
+int	get_ai_move(t_move *move);
+
+// random.c
+int	get_ai_move_random(t_move *move);
 
 // evaluation.c
+int evaluation_current(void);
 int evaluation(void);
 
 // utils
@@ -66,7 +72,7 @@ int 	inside_board(char letter, char number);
 int 	is_piece(char p);
 int		locate_king(char team, int king_pos[2]);
 int		my_piece_is_attacked(int pos_x, int pos_y);
-void	change_player(void);
+int		change_player(void);
 int 	king_under_attack(void);
 int		verif_check(void);
 int		reset_en_passant(void);
@@ -75,11 +81,11 @@ int 	save_data(int mode);
 // move
 // move.c
 int	update_board(t_move move);
-int	do_move(t_move *move);
+int	do_move(t_move move);
 void clone_board(t_square clone[8][8], int mode);
 
 // promotion.c
-int	promotion(t_move *move);
+int	promotion(t_move move);
 
 // castling.c
 int	do_castle(t_move move);
@@ -88,9 +94,8 @@ int	uncastling(t_piece p, t_move move);
 
 // legal.c
 int	is_legal_move(t_move move);
-int	get_move(t_move *move, int count);
-int	can_move(t_move *move, t_square clone[8][8]);
-int	search_legal_move(void);
+int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b);
+int	generate_legal_move(t_move move[218]);
 
 
 // pieces

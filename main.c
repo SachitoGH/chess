@@ -32,12 +32,12 @@ int get_player_move(t_move *move)
 		special_command(input);
 		return (1);
 	}
-	else if (verif_input(input))
+	else if (!verif_input(input))
 	{
 		printf("%sBAD SYNTAX%s\n", color("red"), color(0));
 		return (1);
 	}
-	else if (str_to_move(input, move))
+	else if (!str_to_move(input, move))
 	{
 		printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
 		return (1);
@@ -60,7 +60,7 @@ int	main(void)
 		ret = 0;
 		if (player != *team[move_count % 2])
     	{
-			// printf("score: %i\n", evaluation());
+			// print_board();
 			player = *team[move_count % 2];
 			verif_check();
 			reset_en_passant();
@@ -68,11 +68,12 @@ int	main(void)
 		if (player == 'w')
 			ret = get_player_move(&move);
 		else if (player == 'b')
-			ret = get_ia_move(&move);	
-		if (!ret && do_move(&move))
+			ret = get_ai_move(&move);	
+		if (!ret && !do_move(move))
 		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
 			print_board();
+			return (0);
 		}
 		else if (!ret)
 		{
