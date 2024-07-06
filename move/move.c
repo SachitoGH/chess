@@ -28,6 +28,7 @@ int	do_move(t_move move)
 	{
 		printf("%i\n", is_castle);
 		do_castle();
+		is_castle = 0;
 	}
 	else
 		update_board(move);
