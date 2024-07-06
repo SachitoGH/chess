@@ -134,5 +134,5 @@ int	get_ai_move(t_move *move)
 {
 	find_best_move(move, 4);
     printf("AI move: %c%d -> %c%d\n", move->from[1] + 'a', 8 - move->from[0], move->to[1] + 'a', 8 - move->to[0]);
-	return (0);
+    return (0);
 }

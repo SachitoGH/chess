@@ -60,7 +60,7 @@ int	main(void)
 		ret = 0;
 		if (player != *team[move_count % 2])
     	{
-			// print_board();
+			print_board();
 			player = *team[move_count % 2];
 			verif_check();
 			reset_en_passant();
