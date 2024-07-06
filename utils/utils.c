@@ -262,6 +262,7 @@ int	reset_en_passant(void)
 
 int save_data(int mode)
 {
+	static int		ic;
 	static int 		ep[2][8];
 	static int 		cc[2][2];
 	int	i;
@@ -269,6 +270,8 @@ int save_data(int mode)
 	i = 0;
 	if (mode == 0)
 	{
+		ic = is_castle;
+		printf("ic : %i\n", ic);
 		while (i < 8)
 		{
 			ep[(player == 'b') + 1][i] = en_passant[(player == 'b') + 1][i];
@@ -283,6 +286,8 @@ int save_data(int mode)
 	}
 	else if (mode == 1)
 	{
+		is_castle = ic;
+		printf("ic2 : %i\n", ic);
 		while (i < 8)
 		{
 			en_passant[(player == 'b') + 1][i] = ep[(player == 'b') + 1][i];

@@ -5,14 +5,15 @@ int king(t_piece p, t_move move)
     int dist_x;
     int dist_y;
 
-    if (move.to[0] == 9)
+    dist_x = move.to[1] - move.from[1];
+    dist_y = move.to[0] - move.from[0];
+  	if (abs(dist_x) == 2 && abs(dist_y) == 0)
 	{
+		printf("OUI\n");
 		if (castling_verif(p, move))
 			return (1);
 		return (0);
 	}
-    dist_x = move.to[1] - move.from[1];
-    dist_y = move.to[0] - move.from[0];
 	if (dist_x < -1 || dist_x > 1 || dist_y < -1 || dist_y > 1)
         return (1);
     if (!board[move.to[0]][move.to[1]].piece.name || board[move.to[0]][move.to[1]].piece.team != p.team)

@@ -40,6 +40,7 @@ extern int		move_chess;
 extern t_square	board[8][8];
 extern char		player;
 extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
+extern int		is_castle;
 
 // stockfish
 // minimax.c
@@ -88,7 +89,7 @@ void clone_board(t_square clone[8][8], int mode);
 int	promotion(t_move move);
 
 // castling.c
-int	do_castle(t_move move);
+int	do_castle();
 int	castling_verif(t_piece p, t_move move);
 int	uncastling(t_piece p, t_move move);
 

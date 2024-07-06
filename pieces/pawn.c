@@ -16,7 +16,7 @@ int	pawn(t_piece p, t_move move)
 {
 	int	dist_x;
 	int	dist_y;
-	int	en_passant_row[2] = {5, 2};
+	int	en_passant_row[2] = {2, 5};
 
 	dist_x = move.to[1] - move.from[1];
 	dist_y = move.to[0] - move.from[0];
@@ -43,7 +43,7 @@ int	pawn(t_piece p, t_move move)
 		if (dist_x == 1 || dist_x == -1)
 		{
 			// en passant
-			if (move.to[0] == en_passant_row[player == 'w'] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
+			if (move.to[0] == en_passant_row[player == 'b'] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
 			{
 				do_en_passant(move);
 				return (0);

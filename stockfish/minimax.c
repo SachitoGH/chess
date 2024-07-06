@@ -103,11 +103,13 @@ int find_best_move(t_move *move, int depth)
     t_move best_move;
     int move_value;
     int best_value;
+	int	count;
 
-    player_save = player;
-    clone_board(temp_board, 0);
+	count = 0;
+
     t_move moves[218];
     int num_moves = generate_legal_move(moves);
+	player_save = player;
     if (player == 'w')
         best_value = INT_MIN;
     else
@@ -121,13 +123,17 @@ int find_best_move(t_move *move, int depth)
         {
             best_value = move_value;
             best_move = moves[i];
+			count++;
         }
         player = player_save;
         clone_board(temp_board, 1); // Restore board
     }
     printf("value: %d\n", best_value);
-    *move = best_move;
-    return 0;
+    if (count)
+		*move = best_move;
+    else
+		*move = moves[0];
+	return (0);
 }
 
 int	get_ai_move(t_move *move)

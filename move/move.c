@@ -15,7 +15,6 @@ void clone_board(t_square clone[8][8], int mode)
     	memcpy(clone, board, 8 * 8 * sizeof(t_square));
 	else
     	memcpy(board, clone, 8 * 8 * sizeof(t_square));
-
 }
 
 int	do_move(t_move move)
@@ -25,14 +24,15 @@ int	do_move(t_move move)
 	clone_board(clone, 0);
 	if (is_legal_move(move))
 		return(0);
-	if (move.to[0] == 9)
-		do_castle(move);
+	if (is_castle)
+	{
+		printf("%i\n", is_castle);
+		do_castle();
+	}
 	else
 		update_board(move);
 	if (king_under_attack())
 	{
-		if (en_passant[(player == 'b') + 1][move.to[1]] == 2)
-			en_passant[(player == 'b') + 1][move.to[1]] = 1;
 		clone_board(clone, 1);
 		return (0);
 	}

@@ -15,6 +15,7 @@ t_square	board[8][8] = {
 char		player = 0;
 char		promote_to;
 int			move_chess = 1;
+int			is_castle = 0;
 
 int get_player_move(t_move *move)
 {
@@ -60,15 +61,16 @@ int	main(void)
 		ret = 0;
 		if (player != *team[move_count % 2])
     	{
-			print_board();
+			// print_board();
 			player = *team[move_count % 2];
 			verif_check();
 			reset_en_passant();
+			is_castle = 0;
 		}
 		if (player == 'w')
 			ret = get_player_move(&move);
 		else if (player == 'b')
-			ret = get_ai_move(&move);	
+			ret = get_player_move(&move);	
 		if (!ret && !do_move(move))
 		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));

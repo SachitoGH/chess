@@ -90,14 +90,17 @@ char	*san_to_coord(char *san)
 	{
 		move[0] = 'e';
 		move[1] = '1' + row[player == 'b'];
-		move[2] = 'O';
 		if (!strcmp(san, "O-O"))
-			move[3] = '\0';
+		{
+			move[2] = 'g';
+			move[3] = '1' + row[player == 'b'];
+		}
 		else
 		{
-			move[3] = 'O';
-			move[4] = '\0';
+			move[2] = 'c';
+			move[3] = '1' + row[player == 'b'];
 		}
+		move[4] = '\0';
 		return (move);
 	}
 	len = 0;
@@ -179,15 +182,6 @@ int	convert_coord(char *move_str, t_move *move)
     move->from[0] = move_str[1] - '1';
 	move->from[1] = move_str[0] - 'a';
     move->from[0] += 7 - (move->from[0] * 2);
-    if (move_str[2] == 'O')
-	{
-		move->to[0] = 9;
-		if (move_str[3] == 'O')
-			move->to[1] = 9;
-		else
-			move->to[1] = 0;
-		return (0);
-	}
 	move->to[0] = move_str[3] - '1';
 	move->to[1] = move_str[2] - 'a';
 	move->to[0] += 7 - (move->to[0] * 2);
