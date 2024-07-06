@@ -31,8 +31,8 @@ int	do_move(t_move move)
 		update_board(move);
 	if (king_under_attack())
 	{
-		if (en_passant[(move_count % 2) + 1][move.to[1]] == 2)
-			en_passant[(move_count % 2) + 1][move.to[1]] = 1;
+		if (en_passant[(player == 'b') + 1][move.to[1]] == 2)
+			en_passant[(player == 'b') + 1][move.to[1]] = 1;
 		clone_board(clone, 1);
 		return (0);
 	}

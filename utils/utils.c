@@ -93,11 +93,11 @@ int	change_player(void)
 	if (player == 'w')
 	{
 		player = 'b';
-		return (1);
+		return (0);
 	}
 	else
 		player = 'w';
-	return (0);
+	return (1);
 }
 
 int king_under_attack(void)
@@ -228,7 +228,7 @@ int	verif_check(void)
   	{
     	if (!legal)
     	{               
-    		printf("%sCHECKMATE %s WIN%s\n", color("green"), team[move_count % 2], color(0));
+    		printf("%sCHECKMATE %s WIN%s\n", color("green"), team[player == 'b'], color(0));
    			printf("[%i]\n", move_chess);
 			print_board();
     		exit(0);                                  
@@ -271,13 +271,13 @@ int save_data(int mode)
 	{
 		while (i < 8)
 		{
-			ep[(move_count % 2) + 1][i] = en_passant[(move_count % 2) + 1][i];
+			ep[(player == 'b') + 1][i] = en_passant[(player == 'b') + 1][i];
 			i++;
 		}
 		i = 0;
 		while (i < 2)
 		{
-			cc[move_count % 2][i] = can_castle[move_count % 2][i];
+			cc[player == 'b'][i] = can_castle[player == 'b'][i];
 			i++;
 		}
 	}
@@ -285,13 +285,13 @@ int save_data(int mode)
 	{
 		while (i < 8)
 		{
-			en_passant[(move_count % 2) + 1][i] = ep[(move_count % 2) + 1][i];
+			en_passant[(player == 'b') + 1][i] = ep[(player == 'b') + 1][i];
 			i++;
 		}
 		i = 0;
 		while (i < 2)
 		{
-			can_castle[move_count % 2][i] = cc[move_count % 2][i];
+			can_castle[player == 'b'][i] = cc[player == 'b'][i];
 			i++;
 		}
 	}

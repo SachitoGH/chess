@@ -47,7 +47,7 @@ int	rook(t_piece p, t_move move)
 	dist_y = move.to[0] - move.from[0];
 	if (!move_straight(p, move.from, dist_x, dist_y))
 	{
-		if (can_castle[move_count % 2][0] == 1 || can_castle[move_count % 2][0] == 1) 
+		if (can_castle[player == 'b'][0] == 1 || can_castle[player == 'b'][0] == 1) 
 			uncastling(p, move);
 		return (0);	
 	}

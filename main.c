@@ -25,7 +25,7 @@ int get_player_move(t_move *move)
 	};
 
 	print_board();
-	printf("(%i) %s move: ", move_chess, team[move_count % 2]);
+	printf("(%i) %s move: ", move_chess, team[player == 'b']);
 	scanf("%s9", input);
 	if (input[0] == '/')
 	{

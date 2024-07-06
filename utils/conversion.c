@@ -89,7 +89,7 @@ char	*san_to_coord(char *san)
     if (!strcmp(san, "O-O") || !strcmp(san, "O-O-O"))
 	{
 		move[0] = 'e';
-		move[1] = '1' + row[move_count % 2];
+		move[1] = '1' + row[player == 'b'];
 		move[2] = 'O';
 		if (!strcmp(san, "O-O"))
 			move[3] = '\0';

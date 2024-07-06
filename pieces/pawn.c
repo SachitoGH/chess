@@ -6,9 +6,9 @@ int	do_en_passant(t_move move)
 
 	en_passant_row[0]++;
 	en_passant_row[1]--;
-	board[move.to[0]][move.to[1]].piece = board[en_passant_row[move_count % 2]][move.to[1]].piece;
-	board[en_passant_row[move_count % 2]][move.to[1]].piece.name = 0;
-	board[en_passant_row[move_count % 2]][move.to[1]].piece.team = 0;
+	board[move.to[0]][move.to[1]].piece = board[en_passant_row[player == 'b']][move.to[1]].piece;
+	board[en_passant_row[player == 'b']][move.to[1]].piece.name = 0;
+	board[en_passant_row[player == 'b']][move.to[1]].piece.team = 0;
 	return (0);
 }
 
@@ -16,7 +16,7 @@ int	pawn(t_piece p, t_move move)
 {
 	int	dist_x;
 	int	dist_y;
-	int	en_passant_row[2] = {2, 5};
+	int	en_passant_row[2] = {5, 2};
 
 	dist_x = move.to[1] - move.from[1];
 	dist_y = move.to[0] - move.from[0];
@@ -31,7 +31,7 @@ int	pawn(t_piece p, t_move move)
             // check path is free
             if (!board[move.to[0] - (dist_y / 2)][move.to[1]].piece.name && !board[move.to[0]][move.to[1]].piece.name)
             {
-				en_passant[move_count % 2][move.from[1]] = 1;
+				en_passant[player == 'b'][move.from[1]] = 1;
 				return (0);
 			}
 		}
@@ -43,7 +43,7 @@ int	pawn(t_piece p, t_move move)
 		if (dist_x == 1 || dist_x == -1)
 		{
 			// en passant
-			if (move.to[0] == en_passant_row[move_count % 2] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
+			if (move.to[0] == en_passant_row[player == 'w'] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
 			{
 				do_en_passant(move);
 				return (0);
