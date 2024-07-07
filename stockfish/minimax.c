@@ -108,7 +108,6 @@ int find_best_move(t_move *move, int depth)
 	int	count;
 
 	count = 0;
-
     t_move moves[218];
     clone_board(temp_board, 0);
     save_data(&tmp, 0);

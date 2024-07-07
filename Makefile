@@ -5,7 +5,8 @@ MAIN        = main.c
 MOVE		= move/move.c \
 			  move/castling.c \
 			  move/legal.c \
-			  move/promotion.c
+			  move/promotion.c \
+			  move/check.c
 
 PIECES		= pieces/pawn.c \
 			  pieces/bishop.c \

@@ -74,11 +74,7 @@ char    *color(char *name);
 char    *color_bg(char *name);
 int 	inside_board(char letter, char number);
 int 	is_piece(char p);
-int		locate_king(char team, int king_pos[2]);
-int		my_piece_is_attacked(int pos_x, int pos_y);
 int		change_player(void);
-int 	king_under_attack(void);
-int		verif_check(void);
 int		reset_en_passant(void);
 int 	save_data(t_data *tmp, int mode);
 
@@ -87,6 +83,12 @@ int 	save_data(t_data *tmp, int mode);
 int	update_board(t_move move);
 int	do_move(t_move move);
 void clone_board(t_square clone[8][8], int mode);
+
+// check.c
+int		locate_king(char team, int king_pos[2]);
+int		my_piece_is_attacked(int pos_x, int pos_y);
+int 	king_under_attack(void);
+int		verif_check(void);
 
 // promotion.c
 int	promotion(t_move move);
@@ -98,7 +100,7 @@ int	uncastling(t_piece p, t_move move);
 
 // legal.c
 int	is_legal_move(t_move move);
-int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b);
+int can_move(t_move move[218], int *count, int a, int b);
 int	generate_legal_move(t_move move[218]);
 
 

@@ -26,11 +26,13 @@ int	is_legal_move(t_move move)
 	return (0);
 }
 
-int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b)
+int can_move(t_move move[218], int *count, int a, int b)
 {
     int i, j;
+    t_square clone[8][8];
     t_data tmp;
 
+    clone_board(clone, 0);
     save_data(&tmp, 0);
 	i = 0;
     while (i < 8)
@@ -52,18 +54,16 @@ int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b)
         }
         i++;
     }
-    return 0;
+    return (0);
 }
 
 int generate_legal_move(t_move move[218])
 {
-    t_square clone[8][8];
     int count;
     int i, j;
 
     count = 0;
     i = 0;
-    clone_board(clone, 0);
 
     while (i < 8)
     {
@@ -71,10 +71,10 @@ int generate_legal_move(t_move move[218])
         while (j < 8)
         {
             if (board[i][j].piece.team == data.player)
-                can_move(move, &count, clone, i, j);
+                can_move(move, &count, i, j);
             j++;
         }
         i++;
     }
-    return count;
+    return (count);
 }
