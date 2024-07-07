@@ -6,9 +6,9 @@ int	do_en_passant(t_move move)
 
 	en_passant_row[0]++;
 	en_passant_row[1]--;
-	board[move.to[0]][move.to[1]].piece = board[en_passant_row[player == 'b']][move.to[1]].piece;
-	board[en_passant_row[player == 'b']][move.to[1]].piece.name = 0;
-	board[en_passant_row[player == 'b']][move.to[1]].piece.team = 0;
+	board[move.to[0]][move.to[1]].piece = board[en_passant_row[data.player == 'b']][move.to[1]].piece;
+	board[en_passant_row[data.player == 'b']][move.to[1]].piece.name = 0;
+	board[en_passant_row[data.player == 'b']][move.to[1]].piece.team = 0;
 	return (0);
 }
 
@@ -31,7 +31,7 @@ int	pawn(t_piece p, t_move move)
             // check path is free
             if (!board[move.to[0] - (dist_y / 2)][move.to[1]].piece.name && !board[move.to[0]][move.to[1]].piece.name)
             {
-				en_passant[player == 'b'][move.from[1]] = 1;
+				data.en_passant[data.player == 'b'][move.from[1]] = 1;
 				return (0);
 			}
 		}
@@ -43,7 +43,7 @@ int	pawn(t_piece p, t_move move)
 		if (dist_x == 1 || dist_x == -1)
 		{
 			// en passant
-			if (move.to[0] == en_passant_row[player == 'b'] && en_passant[(move_count + 1) % 2][move.to[1]] == 1)
+			if (move.to[0] == en_passant_row[data.player == 'b'] && data.en_passant[data.player == 'w'][move.to[1]] == 1)
 			{
 				do_en_passant(move);
 				return (0);

@@ -16,39 +16,39 @@ int	max(int a, int b)
 		return (b);
 }
 
-int negaMax(int depth) 
-{
-	t_move moves[218];
-    t_square temp_board[8][8];
-    char player_save;
-	int score;
-	int num_moves;
-	int max = -INT_MAX;
+// int negaMax(int depth) 
+// {
+// 	t_move moves[218];
+//     t_square temp_board[8][8];
+//     char player_save;
+// 	int score;
+// 	int num_moves;
+// 	int max = -INT_MAX;
 
-	change_player();
-    if (depth == 0) 
-		return evaluation_current();
-	clone_board(temp_board, 0);
-    player_save = player;
-	num_moves = generate_legal_move(moves);
-    for (int i = 0; i < num_moves; i++)  
-	{
-		do_move(moves[i]);
-        score = -negaMax(depth - 1);
-        player = player_save;
-		clone_board(temp_board, 1);
-        if(score > max)
-            max = score;
-    }
-    return (max);
-}
+// 	change_player();
+//     if (depth == 0) 
+// 		return evaluation_current();
+// 	clone_board(temp_board, 0);
+//     player_save = player;
+// 	num_moves = generate_legal_move(moves);
+//     for (int i = 0; i < num_moves; i++)  
+// 	{
+// 		do_move(moves[i]);
+//         score = -negaMax(depth - 1);
+//         player = player_save;
+// 		clone_board(temp_board, 1);
+//         if(score > max)
+//             max = score;
+//     }
+//     return (max);
+// }
 
 int minimax(int depth, int is_maximizing, int alpha, int beta) 
 {
     t_square temp_board[8][8];
     t_move moves[218];
+    t_data tmp;
     int num_moves;
-	char	save_player;
 
     if (depth == 0) 
 	{
@@ -57,7 +57,7 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
 
     num_moves = generate_legal_move(moves);
     clone_board(temp_board, 0);
-	save_player = player;
+    save_data(&tmp, 0);
     if (is_maximizing) 
 	{
         int max_eval = INT_MIN;
@@ -68,7 +68,7 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
             max_eval = max(max_eval, eval);
             alpha = max(alpha, eval);
             clone_board(temp_board, 1); // Restore board
-			player = save_player; // restore player
+            save_data(&tmp, 1);
             if (beta <= alpha) 
 			{
                 break; // Alpha-beta pruning
@@ -86,7 +86,7 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
             min_eval = min(min_eval, eval);          
             beta = min(beta, eval);
             clone_board(temp_board, 1); // Restore board
-			player = save_player;
+            save_data(&tmp, 1);
             if (beta <= alpha)
 			{
                 break; // Alpha-beta pruning
@@ -98,7 +98,7 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
 
 int find_best_move(t_move *move, int depth) 
 {
-    char player_save;
+    t_data tmp;
     t_square temp_board[8][8];
     t_move best_move;
     int move_value;
@@ -108,9 +108,11 @@ int find_best_move(t_move *move, int depth)
 	count = 0;
 
     t_move moves[218];
+    clone_board(temp_board, 0);
+    save_data(&tmp, 0);
     int num_moves = generate_legal_move(moves);
-	player_save = player;
-    if (player == 'w')
+
+    if (data.player == 'w')
         best_value = INT_MIN;
     else
         best_value = INT_MAX;
@@ -119,14 +121,14 @@ int find_best_move(t_move *move, int depth)
     {
         do_move(moves[i]);
         move_value = minimax(depth - 1, change_player(), INT_MIN, INT_MAX);
-        if ((move_value > best_value && player_save == 'w') || (move_value < best_value && player_save == 'b'))
+        if ((move_value > best_value && tmp.player == 'w') || (move_value < best_value && tmp.player == 'b'))
         {
             best_value = move_value;
             best_move = moves[i];
 			count++;
         }
-        player = player_save;
         clone_board(temp_board, 1); // Restore board
+        save_data(&tmp, 1);
     }
     printf("value: %d\n", best_value);
     if (count)

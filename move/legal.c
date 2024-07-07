@@ -6,7 +6,7 @@ int	is_legal_move(t_move move)
 	int		res;
 
 	p = board[move.from[0]][move.from[1]].piece;
-	if (!p.name || p.team != player)
+	if (!p.name || p.team != data.player)
 		return (1);
 	res = 0;
 	if (p.name == 'p')
@@ -29,8 +29,9 @@ int	is_legal_move(t_move move)
 int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b)
 {
     int i, j;
+    t_data tmp;
 
-    save_data(0);
+    save_data(&tmp, 0);
 	i = 0;
     while (i < 8)
     {
@@ -46,7 +47,7 @@ int can_move(t_move move[218], int *count, t_square clone[8][8], int a, int b)
                 clone_board(clone, 1);                
                 (*count)++;
             }
-            save_data(1);
+            save_data(&tmp, 1);
             j++;
         }
         i++;
@@ -69,7 +70,7 @@ int generate_legal_move(t_move move[218])
         j = 0;
         while (j < 8)
         {
-            if (board[i][j].piece.team == player)
+            if (board[i][j].piece.team == data.player)
                 can_move(move, &count, clone, i, j);
             j++;
         }

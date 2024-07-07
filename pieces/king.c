@@ -9,7 +9,6 @@ int king(t_piece p, t_move move)
     dist_y = move.to[0] - move.from[0];
   	if (abs(dist_x) == 2 && abs(dist_y) == 0)
 	{
-		printf("OUI\n");
 		if (castling_verif(p, move))
 			return (1);
 		return (0);

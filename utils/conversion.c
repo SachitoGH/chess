@@ -18,7 +18,7 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 			tmp.from[0] = i;
 			if (board[i][j].piece.name == piece && !is_legal_move(tmp))
 			{
-				if ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != player))
+				if ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != data.player))
 				{	
 					(*move)[0] = san[1];
 					(*move)[1] = '8' - i;
@@ -34,9 +34,9 @@ int	disambiguate(char *san, char **move, char piece, t_move tmp, int takes, int 
 		for (j = 0; j < 8; j++)
 		{
 			tmp.from[1] = j;
-			if (board[i][j].piece.team == player && board[i][j].piece.name == piece && !is_legal_move(tmp))
+			if (board[i][j].piece.team == data.player && board[i][j].piece.name == piece && !is_legal_move(tmp))
 			{
-				if ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != player))
+				if ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != data.player))
 				{	
 					(*move)[0] = 'a' + j;
 					(*move)[1] = san[1];
@@ -60,7 +60,7 @@ int		san_pawn(char **move, char *san, t_move tmp)
 	while (i < 8)
 	{
 		tmp.from[0] = i;
-		if (board[i][j].piece.team == player && board[i][j].piece.name == 'p' && !is_legal_move(tmp))
+		if (board[i][j].piece.team == data.player && board[i][j].piece.name == 'p' && !is_legal_move(tmp))
 		{
 			(*move)[1] = '8' - i;
 			return (1);
@@ -89,18 +89,19 @@ char	*san_to_coord(char *san)
     if (!strcmp(san, "O-O") || !strcmp(san, "O-O-O"))
 	{
 		move[0] = 'e';
-		move[1] = '1' + row[player == 'b'];
+		move[1] = '1' + row[data.player == 'b'];
 		if (!strcmp(san, "O-O"))
 		{
 			move[2] = 'g';
-			move[3] = '1' + row[player == 'b'];
+			move[3] = '1' + row[data.player == 'b'];
 		}
 		else
 		{
 			move[2] = 'c';
-			move[3] = '1' + row[player == 'b'];
+			move[3] = '1' + row[data.player == 'b'];
 		}
 		move[4] = '\0';
+		printf("can_castle: %d %d %d %d\n", data.can_castle[0][0], data.can_castle[0][1], data.can_castle[1][0], data.can_castle[1][1]);
 		return (move);
 	}
 	len = 0;
@@ -112,7 +113,7 @@ char	*san_to_coord(char *san)
 	}
 	if (san[len - 2] == '=')
 	{
-		promote_to = san[len - 1];
+		data.promote_to = san[len - 1];
 		len -= 2;
 	}
 	move[2] = san[len - 2];
@@ -138,15 +139,15 @@ char	*san_to_coord(char *san)
 		while (j < 8)
 		{
 			tmp.from[1] = j;
-			if (board[i][j].piece.team == player && board[i][j].piece.name == piece && !is_legal_move(tmp))
+			if (board[i][j].piece.team == data.player && board[i][j].piece.name == piece && !is_legal_move(tmp))
 			{
-				if (found == 0 && ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != player)))
+				if (found == 0 && ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != data.player)))
 				{
 					move[0] = 'a' + j;
 					move[1] = '8' - i;
 					found++;
 				}
-				else if (found && ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != player)))
+				else if (found && ((!takes && !board[tmp.to[0]][tmp.to[1]].piece.name) || (takes && board[tmp.to[0]][tmp.to[1]].piece.name && board[tmp.to[0]][tmp.to[1]].piece.team != data.player)))
 				{
 					if (disambiguate(san, &move, piece, tmp, takes, len))
 					{
@@ -167,13 +168,15 @@ char	*san_to_coord(char *san)
 }
 int	str_to_move(char *move_str, t_move *move)
 {
-	save_data(0);
+	t_data	tmp;
+
+	save_data(&tmp, 0);
 	move_str = san_to_coord(move_str);
 	if (!move_str)
 		return (0);
 	convert_coord(move_str, move);
 	free(move_str);
-	save_data(1);
+	save_data(&tmp, 1);
 	return (1);
 }
 

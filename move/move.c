@@ -24,11 +24,10 @@ int	do_move(t_move move)
 	clone_board(clone, 0);
 	if (is_legal_move(move))
 		return(0);
-	if (is_castle)
+	if (data.is_castle)
 	{
-		printf("%i\n", is_castle);
 		do_castle();
-		is_castle = 0;
+		data.is_castle = 0;
 	}
 	else
 		update_board(move);
@@ -37,7 +36,7 @@ int	do_move(t_move move)
 		clone_board(clone, 1);
 		return (0);
 	}
-	if (board[move.to[0]][move.to[1]].piece.name == 'p' && ((move.to[0] == 7 && player == 'b') || (move.to[0] == 0 && player == 'w')))
+	if (board[move.to[0]][move.to[1]].piece.name == 'p' && ((move.to[0] == 7 && data.player == 'b') || (move.to[0] == 0 && data.player == 'w')))
 		promotion(move);
 	return (1);	
 }

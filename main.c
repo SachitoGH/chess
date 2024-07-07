@@ -1,7 +1,6 @@
 #include "chess.h"
-int			en_passant[2][8] = {{0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0}};
-int			can_castle[2][2] = {{1, 1}, {1, 1}};
-int			move_count = 0;
+
+t_data	data = {0};
 t_square	board[8][8] = {
 	{{{'r', 'b'}, 'w'}, {{'n', 'b'}, 'b'}, {{'b', 'b'}, 'w'}, {{'q', 'b'}, 'b'}, {{'k', 'b'}, 'w'}, {{'b', 'b'}, 'b'}, {{'n', 'b'}, 'w'}, {{'r', 'b'}, 'b'}},
     {{{'p', 'b'}, 'b'}, {{'p', 'b'}, 'w'}, {{'p', 'b'}, 'b'}, {{'p', 'b'}, 'w'}, {{'p', 'b'}, 'b'}, {{'p', 'b'}, 'w'}, {{'p', 'b'}, 'b'}, {{'p', 'b'}, 'w'}},
@@ -12,10 +11,6 @@ t_square	board[8][8] = {
     {{{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}, {{'p', 'w'}, 'w'}, {{'p', 'w'}, 'b'}},
     {{{'r', 'w'}, 'b'}, {{'n', 'w'}, 'w'}, {{'b', 'w'}, 'b'}, {{'q', 'w'}, 'w'}, {{'k', 'w'}, 'b'}, {{'b', 'w'}, 'w'}, {{'n', 'w'}, 'b'}, {{'r', 'w'}, 'w'}}
 };
-char		player = 0;
-char		promote_to;
-int			move_chess = 1;
-int			is_castle = 0;
 
 int get_player_move(t_move *move)
 {
@@ -26,7 +21,7 @@ int get_player_move(t_move *move)
 	};
 
 	print_board();
-	printf("(%i) %s move: ", move_chess, team[player == 'b']);
+	printf("(%i) %s move: ", data.move_chess, team[data.player == 'b']);
 	scanf("%s9", input);
 	if (input[0] == '/')
 	{
@@ -46,6 +41,29 @@ int get_player_move(t_move *move)
 	return (0);
 }
 
+int init_data()
+{
+	int	i;
+
+	i = 0;
+	data.move_count = 0;
+	data.move_chess = 1;
+	data.can_castle[0][0] = 1;
+	data.can_castle[0][1] = 1;
+	data.can_castle[1][0] = 1;
+	data.can_castle[1][1] = 1;
+	data.is_castle = 0;
+	while (i < 8)
+	{
+		data.en_passant[0][i] = 0;
+		data.en_passant[1][i] = 0;
+		i++;
+	}
+	data.promote_to = 0;
+	data.player = 'w';
+	return (0);
+}
+
 int	main(void)
 {
 	char	team[2][6] = {
@@ -55,34 +73,35 @@ int	main(void)
 	t_move	move;
 	int		ret;
 	
+	init_data();
 	srand(time(NULL));
 	while (1)
 	{
 		ret = 0;
-		if (player != *team[move_count % 2])
+		if (data.player != *team[data.move_count % 2])
     	{
 			// print_board();
-			player = *team[move_count % 2];
+			data.player = *team[data.move_count % 2];
 			verif_check();
 			reset_en_passant();
-			is_castle = 0;
+			data.is_castle = 0;
 		}
-		if (player == 'w')
+		if (data.player == 'w')
 			ret = get_player_move(&move);
-		else if (player == 'b')
-			ret = get_player_move(&move);	
+		else if (data.player == 'b')
+			ret = get_ai_move(&move);	
 		if (!ret && !do_move(move))
 		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
 			print_board();
-			return (0);
+			// return (0);
 		}
 		else if (!ret)
 		{
-			if (player == 'b')
-				move_chess++;
-			move_count++;
-			if (move_chess > 1000)
+			if (data.player == 'b')
+				data.move_chess++;
+			data.move_count++;
+			if (data.move_chess > 1000)
 			{
 				printf("+1000 coups\n");
 				return(0);

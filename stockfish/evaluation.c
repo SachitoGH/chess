@@ -126,9 +126,9 @@ int evaluation_current(void)
         j = 0;
         while (j < 8)
         {
-            if (board[i][j].piece.team == player)
+            if (board[i][j].piece.team == data.player)
                 score += get_piece_value(board[i][j].piece.name);
-            else if (board[i][j].piece.team != player && board[i][j].piece.team != 0)
+            else if (board[i][j].piece.team != data.player && board[i][j].piece.team != 0)
                 score -= get_piece_value(board[i][j].piece.name);
             j++;
         }

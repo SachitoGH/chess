@@ -31,16 +31,20 @@ typedef struct s_move
 	int	to[2];
 }	t_move;
 
+typedef struct s_data
+{
+	int		move_count;
+	int		move_chess;
+	int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
+	int		is_castle;
+	int		en_passant[2][8];
+	char	promote_to;
+	char	player;
+}	t_data;
 
 // global var;
-extern int		en_passant[2][8];
-extern char		promote_to;
-extern int		move_count;
-extern int		move_chess;
+extern t_data	data;
 extern t_square	board[8][8];
-extern char		player;
-extern int		can_castle[2][2]; // [0] = white [1] = black [.][0] = left [.][1] = right
-extern int		is_castle;
 
 // stockfish
 // minimax.c
@@ -66,7 +70,6 @@ int		convert_coord(char *move_str, t_move *move);
 int		update_board(t_move move);
 void	print_board(void);
 int		verif_input(char *move);
-int 	save_data(int mode);
 char    *color(char *name);
 char    *color_bg(char *name);
 int 	inside_board(char letter, char number);
@@ -77,7 +80,7 @@ int		change_player(void);
 int 	king_under_attack(void);
 int		verif_check(void);
 int		reset_en_passant(void);
-int 	save_data(int mode);
+int 	save_data(t_data *tmp, int mode);
 
 // move
 // move.c

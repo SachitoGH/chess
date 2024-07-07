@@ -90,13 +90,13 @@ int	my_piece_is_attacked(int pos_x, int pos_y)
 }
 int	change_player(void)
 {
-	if (player == 'w')
+	if (data.player == 'w')
 	{
-		player = 'b';
+		data.player = 'b';
 		return (0);
 	}
 	else
-		player = 'w';
+		data.player = 'w';
 	return (1);
 }
 
@@ -104,7 +104,7 @@ int king_under_attack(void)
 {
 	int		king_pos[2];
 
-	locate_king(player, king_pos);
+	locate_king(data.player, king_pos);
 	if (my_piece_is_attacked(king_pos[0], king_pos[1]))
 		return (1);
 	return (0);
@@ -130,7 +130,7 @@ void	print_board(void)
 				else
 					printf("%s .%s", color(BLACK_COLOR), color(0));
 			}
-			else if (board[i][j].piece.team == player && board[i][j].piece.name == 'k' && my_piece_is_attacked(i, j))
+			else if (board[i][j].piece.team == data.player && board[i][j].piece.name == 'k' && my_piece_is_attacked(i, j))
 				printf("%s %c%s", color("red"), board[i][j].piece.name - 32, color(0));
 			else if (board[i][j].piece.team == 'w' && board[i][j].piece.name == 'p')
 				printf("%s %c%s", color(WHITE_COLOR), board[i][j].piece.name, color(0));
@@ -156,7 +156,7 @@ int	verif_input(char *move)
 	len = strlen(move);
 	if (move[len - 2] == '=' && is_piece(move[len - 1]))
 	{
-		promote_to = move[len - 1];
+		data.promote_to = move[len - 1];
 		len -= 2;
 	}
 	if (len > 5)
@@ -208,6 +208,7 @@ int	verif_kings(void)
 
 int	verif_check(void)
 {
+	t_data	tmp;
 	t_move  moves[218];
   	int 	legal;
 	char	team[2][6] = {
@@ -215,11 +216,11 @@ int	verif_check(void)
 		{"WHITE"},
 	};
 
-	save_data(0);
+	save_data(&tmp, 0);
 	if (verif_kings())
 	{
 		printf("%sDRAW%s\n", color("green"), color(0));
-		printf("[%i]\n", move_chess);
+		printf("[%i]\n", data.move_chess);
 		print_board();
 		exit(0);
 	}
@@ -228,8 +229,8 @@ int	verif_check(void)
   	{
     	if (!legal)
     	{               
-    		printf("%sCHECKMATE %s WIN%s\n", color("green"), team[player == 'b'], color(0));
-   			printf("[%i]\n", move_chess);
+    		printf("%sCHECKMATE %s WIN%s\n", color("green"), team[data.player == 'b'], color(0));
+   			printf("[%i]\n", data.move_chess);
 			print_board();
     		exit(0);                                  
     	}
@@ -239,11 +240,11 @@ int	verif_check(void)
   	if (!legal)
 	{
     	printf("%sSTALEMATE%s\n", color("green"), color(0));
-    	printf("[%i]\n", move_chess);
+    	printf("[%i]\n", data.move_chess);
 		print_board();
     	exit(0);
 	}
-	save_data(1);
+	save_data(&tmp, 1);
 	return (0);
 }
 
@@ -254,51 +255,29 @@ int	reset_en_passant(void)
 	i = 0;
 	while (i < 8)
 	{
-		en_passant[(move_count) % 2][i] = 0;
+		data.en_passant[data.player == 'b'][i] = 0;
 		i++;
 	}
 	return (0);
 }
 
-int save_data(int mode)
+int save_data(t_data *tmp, int mode)
 {
-	static int		ic;
-	static int 		ep[2][8];
-	static int 		cc[2][2];
-	int	i;
-
-	i = 0;
 	if (mode == 0)
 	{
-		ic = is_castle;
-		printf("ic : %i\n", ic);
-		while (i < 8)
-		{
-			ep[(player == 'b') + 1][i] = en_passant[(player == 'b') + 1][i];
-			i++;
-		}
-		i = 0;
-		while (i < 2)
-		{
-			cc[player == 'b'][i] = can_castle[player == 'b'][i];
-			i++;
-		}
+		tmp->promote_to = data.promote_to;
+		tmp->player = data.player;
+		tmp->is_castle = data.is_castle;
+		memcpy(tmp->en_passant, data.en_passant, 2 * 8 * sizeof(int));
+		memcpy(tmp->can_castle, data.can_castle, 2 * 2 * sizeof(int));
 	}
 	else if (mode == 1)
 	{
-		is_castle = ic;
-		printf("ic2 : %i\n", ic);
-		while (i < 8)
-		{
-			en_passant[(player == 'b') + 1][i] = ep[(player == 'b') + 1][i];
-			i++;
-		}
-		i = 0;
-		while (i < 2)
-		{
-			can_castle[player == 'b'][i] = cc[player == 'b'][i];
-			i++;
-		}
+		data.promote_to = tmp->promote_to;
+		data.player = tmp->player;
+		data.is_castle = tmp->is_castle;
+		memcpy(data.en_passant, tmp->en_passant, 2 * 8 * sizeof(int));
+		memcpy(data.can_castle, tmp->can_castle, 2 * 2 * sizeof(int));
 	}
 	return (0);
 }
