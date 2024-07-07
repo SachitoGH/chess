@@ -16,33 +16,6 @@ int	max(int a, int b)
 		return (b);
 }
 
-// int negaMax(int depth) 
-// {
-// 	t_move moves[218];
-//     t_square temp_board[8][8];
-//     char player_save;
-// 	int score;
-// 	int num_moves;
-// 	int max = -INT_MAX;
-
-// 	change_player();
-//     if (depth == 0) 
-// 		return evaluation_current();
-// 	clone_board(temp_board, 0);
-//     player_save = player;
-// 	num_moves = generate_legal_move(moves);
-//     for (int i = 0; i < num_moves; i++)  
-// 	{
-// 		do_move(moves[i]);
-//         score = -negaMax(depth - 1);
-//         player = player_save;
-// 		clone_board(temp_board, 1);
-//         if(score > max)
-//             max = score;
-//     }
-//     return (max);
-// }
-
 int minimax(int depth, int is_maximizing, int alpha, int beta) 
 {
     t_square temp_board[8][8];
@@ -96,6 +69,35 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
     }
 }
 
+int negamax(int depth, int color, int alpha, int beta) 
+{
+    t_square temp_board[8][8];
+    t_move moves[218];
+    t_data tmp;
+    int num_moves;
+
+    if (depth == 0) 
+        return color * evaluation_current();
+
+    num_moves = generate_legal_move(moves);
+    clone_board(temp_board, 0);
+    save_data(&tmp, 0);
+
+    int max_eval = INT_MIN;
+    for (int i = 0; i < num_moves; i++) 
+    {
+        do_move(moves[i]);
+        int eval = -negamax(depth - 1, -color, -beta, -alpha);
+        max_eval = max(max_eval, eval);
+        alpha = max(alpha, eval);
+        clone_board(temp_board, 1); // Restore board
+        save_data(&tmp, 1);
+        if (alpha >= beta) 
+            break; // Alpha-beta pruning
+    }
+    return (max_eval);
+}
+
 int find_best_move(t_move *move, int depth) 
 {
     t_data tmp;
@@ -120,7 +122,7 @@ int find_best_move(t_move *move, int depth)
     for (int i = 0; i < num_moves; i++) 
     {
         do_move(moves[i]);
-        move_value = minimax(depth - 1, change_player(), INT_MIN, INT_MAX);
+        move_value = negamax(depth - 1, change_player(), INT_MIN, INT_MAX);
         if ((move_value > best_value && tmp.player == 'w') || (move_value < best_value && tmp.player == 'b'))
         {
             best_value = move_value;

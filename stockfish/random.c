@@ -11,7 +11,7 @@ int	get_ai_move_random(t_move *move)
 	int	rand_legal;
 	t_move moves[218];
 
-
+	srand(time(NULL));
 	legal = generate_legal_move(moves);
 	if (legal)
 	{

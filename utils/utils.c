@@ -93,7 +93,7 @@ int	change_player(void)
 	if (data.player == 'w')
 	{
 		data.player = 'b';
-		return (0);
+		return (-1);
 	}
 	else
 		data.player = 'w';

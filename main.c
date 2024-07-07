@@ -74,7 +74,6 @@ int	main(void)
 	int		ret;
 	
 	init_data();
-	srand(time(NULL));
 	while (1)
 	{
 		ret = 0;
@@ -87,9 +86,9 @@ int	main(void)
 			data.is_castle = 0;
 		}
 		if (data.player == 'w')
-			ret = get_player_move(&move);
+			ret = get_ai_move(&move);
 		else if (data.player == 'b')
-			ret = get_ai_move(&move);	
+			ret = get_player_move(&move);	
 		if (!ret && !do_move(move))
 		{
 			printf("%sMOVE ILLEGAL%s\n", color("red"), color(0));
