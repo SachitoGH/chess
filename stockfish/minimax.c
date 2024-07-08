@@ -16,6 +16,18 @@ int	max(int a, int b)
 		return (b);
 }
 
+int	change_player_neg(void)
+{
+	if (data.player == 'w')
+	{
+		data.player = 'b';
+		return (-1);
+	}
+	else
+		data.player = 'w';
+	return (1);
+}
+
 int minimax(int depth, int is_maximizing, int alpha, int beta) 
 {
     t_square temp_board[8][8];
@@ -28,9 +40,9 @@ int minimax(int depth, int is_maximizing, int alpha, int beta)
         return evaluation();
     }
 
-    num_moves = generate_legal_move(moves);
-    clone_board(temp_board, 0);
     save_data(&tmp, 0);
+	clone_board(temp_board, 0);
+    num_moves = generate_legal_move(moves);
     if (is_maximizing) 
 	{
         int max_eval = INT_MIN;
@@ -79,15 +91,14 @@ int negamax(int depth, int color, int alpha, int beta)
     if (depth == 0) 
         return color * evaluation_current();
 
-    num_moves = generate_legal_move(moves);
-    clone_board(temp_board, 0);
     save_data(&tmp, 0);
-
+	clone_board(temp_board, 0);
+    num_moves = generate_legal_move(moves);
     int max_eval = INT_MIN;
     for (int i = 0; i < num_moves; i++) 
     {
         do_move(moves[i]);
-        int eval = -negamax(depth - 1, -color, -beta, -alpha);
+        int eval = -negamax(depth - 1, change_player_neg(), -beta, -alpha);
         max_eval = max(max_eval, eval);
         alpha = max(alpha, eval);
         clone_board(temp_board, 1); // Restore board
@@ -121,7 +132,7 @@ int find_best_move(t_move *move, int depth)
     for (int i = 0; i < num_moves; i++) 
     {
         do_move(moves[i]);
-        move_value = negamax(depth - 1, change_player(), INT_MIN, INT_MAX);
+        move_value = minimax(depth - 1, change_player(), INT_MIN, INT_MAX);
         if ((move_value > best_value && tmp.player == 'w') || (move_value < best_value && tmp.player == 'b'))
         {
             best_value = move_value;
