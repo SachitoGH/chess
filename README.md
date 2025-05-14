@@ -25,3 +25,10 @@
 ```sh
 ❯ ./chess
 ```
+
+## Features
+
+- Use /help to display command list
+- Use algebraic notation to do move
+- Play against AI (MiniMax algorithm)
+
