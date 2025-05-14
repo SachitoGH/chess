@@ -1,4 +1,4 @@
-# Chess ASCI
+# Chess ASCII
 
 
 ## Installation
